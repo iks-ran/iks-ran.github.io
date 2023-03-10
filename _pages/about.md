@@ -8,13 +8,10 @@ redirect_from:
   - /about.html
 ---
 
-I'm a third year undergraduate student from [College of Control Science and Engineering](http://www.cse.zju.edu.cn/cseenglish/), [Zhejiang University](https://www.zju.edu.cn/english/). My research interest includes computer vision and machine learning.
+I‘m a third-year undergraduate student from [College of Control Science and Engineering](http://www.cse.zju.edu.cn/cseenglish/){:target="_blank"}
+, [Zhejiang University](https://www.zju.edu.cn/english/){:target="_blank"}. My research interests include computer vision and machine learning. Currently, my focus is on MOT (Multiple Objects Tracking), striving to improve the efficiency of tracking one object between different frames. Additionally, I have a strong curiosity about the interpretability of deep neural networks and pay close attention to this area of study.
 
-...
-
-<!--I am now very fortunate to be advised by [Prof. Ye](https://person.zju.edu.cn/en/yeqi) of [Group of Networked Sensing and Control](http://nesc.zju.edu.cn/#/).-->
-
-You can find my CV [here](../Academic_CV.pdf)
+Here's my [CV](./../files/Academic_CV.pdf){:target="_blank"}.
 
 Education
 ======
@@ -22,4 +19,4 @@ Education
 
 Research Experience
 ======
-* *Research assistant at [NeSC Group](http://nesc.zju.edu.cn/#/), ZJU, under supervision of [Prof. Ye](https://person.zju.edu.cn/en/yeqi), 2022.9 - present*
+* Undergrate researcher at [NeSC Group](http://nesc.zju.edu.cn/#/){:target="_blank"}, Zhejiang University, under supervision of [Prof. Ye](https://scholar.google.com/citations?hl=en&user=4D-HZ98AAAAJ){:target="_blank"}, 2022.9 - present
