@@ -1,0 +1,788 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/pageicon.png">
+  <link rel="icon" href="/img/pageicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="iks-ran">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="TransformerModel Architecture          Fig.1 Transformer   Transformer was firsr used for machine translation with an an encoder-decoder structure, see Fig.1. The input (source) and output (target) se">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Transformer">
+<meta property="og:url" content="https://iks-ran.github.io/2023/07/19/transformer/index.html">
+<meta property="og:site_name" content="iks-ran">
+<meta property="og:description" content="TransformerModel Architecture          Fig.1 Transformer   Transformer was firsr used for machine translation with an an encoder-decoder structure, see Fig.1. The input (source) and output (target) se">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://iks-ran.github.io/img/blogs/230719-transformer/1.png">
+<meta property="article:published_time" content="2023-07-19T15:13:39.045Z">
+<meta property="article:modified_time" content="2023-08-10T12:21:14.759Z">
+<meta property="article:author" content="iks-ran">
+<meta property="article:tag" content="Deep Learning">
+<meta property="article:tag" content="Natural Language Processing">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://iks-ran.github.io/img/blogs/230719-transformer/1.png">
+  
+  
+  
+  <title>Transformer - iks-ran</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"iks-ran.github.io","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>iks-ran</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/blogs/230719-transformer/1.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Transformer"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-07-19 23:13" pubdate>
+          July 19, 2023 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          9.2k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          77 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Transformer</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="Transformer"><a href="#Transformer" class="headerlink" title="Transformer"></a>Transformer</h2><h3 id="Model-Architecture"><a href="#Model-Architecture" class="headerlink" title="Model Architecture"></a>Model Architecture</h3><figure>
+    <img src="/img/blogs/230719-transformer/1.png" srcset="/img/loading.gif" lazyload alt="Fig.1 Transformer" width=400>
+    <figcaption>Fig.1 Transformer</figcaption>
+</figure>
+
+<p>Transformer was firsr used for machine translation with an an encoder-decoder structure, see Fig.1. The input (source) and output (target) sequence embeddings are added with positional encoding before being fed into the encoder and the decoder that stack modules based on self-attention.</p>
+<h4 id="Scaled-Dot-Product-Attention"><a href="#Scaled-Dot-Product-Attention" class="headerlink" title="Scaled Dot-Product Attention"></a>Scaled Dot-Product Attention</h4><figure>
+    <img src="/img/blogs/230719-transformer/2.png" srcset="/img/loading.gif" lazyload alt="Fig.2 Scaled Dot-Product Attention" width=200>
+    <figcaption>Fig.2 Scaled Dot-Product Attention</figcaption>
+</figure>
+
+<p>Transformer uses “Scaled Dot-Product Attention”. The input consists of queries $Q$ and keys $Q$ of dimension $d_k$, and values  $V$ of dimension $d_v$. This attention computes the dot products of the query with all keys, divide each by $\sqrt{d_k}$ and apply a softmax function to obtain the weights on the values. The scaling factor $d_k$ is used to counteract the effect that for large values of $d_k$, the dot products grow large in magnitude, pushing the softmax function into regions where it has extremely small gradients.<br>$$<br>\text{Attention}(Q, K, V) &#x3D; \text{softmax}(\frac{QK^T}{\sqrt{d_k}})V<br>$$</p>
+<p>The Pytorch implementation is </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> torch <span class="hljs-keyword">import</span> nn<br><span class="hljs-keyword">import</span> torch.nn.functional <span class="hljs-keyword">as</span> F<br><span class="hljs-keyword">import</span> einops<br><span class="hljs-keyword">import</span> math<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">ScaledDotProductAttention</span>(nn.Module):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, d_k</span>):<br>        <span class="hljs-built_in">super</span>(ScaledDotProductAttention, self).__init__()<br>        self.scaling_factor = math.sqrt(d_k)<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, q, k, v, mask=<span class="hljs-literal">None</span></span>):<br><br>        qk = einops.einsum(q, k, <span class="hljs-string">&#x27;... q_s d_k, ... kv_s d_k -&gt; ... q_s kv_s&#x27;</span>)<br><br>        <span class="hljs-keyword">if</span> mask <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span>:<br>            qk = qk.masked_fill(mask == <span class="hljs-number">0</span>, -<span class="hljs-number">1e8</span>)<br><br>        score = F.softmax(qk / self.scaling_factor, dim=-<span class="hljs-number">1</span>)<br>        attn = einops.einsum(score, v, <span class="hljs-string">&#x27;... q_s kv_s, ... kv_s d_v -&gt; ... q_s d_v&#x27;</span>)<br>        <br>        <span class="hljs-keyword">return</span> attn<br></code></pre></td></tr></table></figure>
+
+<h4 id="Multi-head-Attention"><a href="#Multi-head-Attention" class="headerlink" title="Multi-head Attention"></a>Multi-head Attention</h4><figure>
+    <img src="/img/blogs/230719-transformer/3.png" srcset="/img/loading.gif" lazyload alt="Fig.3 Multi-head Attention" width=300>
+    <figcaption>Fig.3 Multi-head Attention</figcaption>
+</figure>
+
+<p>Multi-head attention allows the model to jointly attend to information from different representation subspaces at different positions. Instead of performing a single attention function with $d_{model}$-dimensional keys, values and queries, it’s beneficial to linearly project the queries, keys and values $h$ times with different, learned linear projections to $d_k, d_k$ and $d_v$ dimensions, respectively. On each of these projected versions of queries, keys and values, the attention function is performed in parallel, yielding $d_v$-dimensional output values. These are concatenated and once again projected, resulting in the final values. In this work, $d_k&#x3D;d_v&#x3D;d_{model} &#x2F; h$</p>
+<p>The Pytorch implementation is</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> einops.layers.torch <span class="hljs-keyword">import</span> Rearrange, Repeat<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">MultiHeadAttention</span>(nn.Module):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, d_model, n_heads</span>):<br>        <span class="hljs-built_in">super</span>(MultiHeadAttention, self).__init__()<br>        self.d_model = d_model<br>        self.n_heads = n_heads<br>        self.w_q = nn.Linear(d_model, d_model)<br>        self.w_k = nn.Linear(d_model, d_model)<br>        self.w_v = nn.Linear(d_model, d_model)<br>        self.to_multi_head = Rearrange(<span class="hljs-string">&#x27;... s (h d_k) -&gt; ... h s d_k&#x27;</span>, h=n_heads)<br>        self.mask_repeat = Repeat(mask, <span class="hljs-string">&#x27;... s -&gt; ... h s d_k&#x27;</span>, h=n_heads, d_k=d_model // n_heads)<br>        self.attention = ScaledDotProductAttention(d_model // n_heads)<br>        self.concat = Rearrange(<span class="hljs-string">&#x27;... h s d_k -&gt; ... s (h d_k)&#x27;</span>)<br>        self.w_o = nn.Linear(d_model, d_model)<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, q, k, v, mask=<span class="hljs-literal">None</span></span>):<br><br>        mh_q, mh_k, mh_v = self.to_multi_head([self.w_q(q), self.w_k(k), self.w_v(v)])<br><br>        <span class="hljs-keyword">if</span> mask <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span>:<br>            mask = self.mask_repeat(mask)<br>        mh_attn = self.attention(mh_q, mh_k, mh_v, mask=mask)<br>        attn = self.concat(mh_attn)<br><br>        o = self.w_o(attn)<br>        <br>        <span class="hljs-keyword">return</span> o<br></code></pre></td></tr></table></figure>
+
+<h4 id="Point-wise-Feed-Forward-Networks"><a href="#Point-wise-Feed-Forward-Networks" class="headerlink" title="Point-wise Feed-Forward Networks"></a>Point-wise Feed-Forward Networks</h4><p>This consists of two linear transformations with a ReLU activation in between.</p>
+<p>$$<br>\text{FFN}(x) &#x3D; \max(0, xW_1+b_1)W_2+b_2<br>$$</p>
+<p>The Pytorch implementation is</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">PointWiseFFN</span>(nn.Module):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, d_model, d_ff</span>):<br>        <span class="hljs-built_in">super</span>(PointWiseFFN, self).__init__()<br>        self.linear_1 = nn.Linear(d_model, d_ff)<br>        self.act = nn.ReLU()<br>        self.linear_2 = nn.Linear(d_model, d_ff)<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, <span class="hljs-built_in">input</span></span>):<br>        <span class="hljs-keyword">return</span> self.linear_2(self.act(self.linear_1(<span class="hljs-built_in">input</span>)))<br></code></pre></td></tr></table></figure>
+
+<h4 id="Positional-Encoding"><a href="#Positional-Encoding" class="headerlink" title="Positional Encoding"></a>Positional Encoding</h4><p>Since transformer contains no recurrence and no convolution, in order for the model to make use of the order of the sequence, “positional encodings” as added to the input embeddings. For transformer, the authors use sine and cosine functions of different frequencies:</p>
+<div style="text-align: center;">
+    <span style="display: inline-block;">
+        \[
+        \begin{aligned}
+        PE(pos, 2i) & = \sin (pos/10000^{2i/d_{model}}) \\
+        PE(pos, 2i+1) & = \cos (pos/10000^{2i/d_{model}}) \\
+        \end{aligned}
+        \]
+    </span>
+</div>
+
+<p>As the two embedding layers and the pre-softmax linear transformation share the same weight, the output of embedding layer should be multiplied by $d_{model}$ (because the pre-softmax linear layer usually inited by xaiver init)</p>
+<p>$$<br>W ～ N(0, 1&#x2F;d_{model})<br>$$</p>
+<p>The Pytorch implementation is </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">PositionalEncoding</span>(nn.Module):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, max_len, d_model</span>):<br>        <span class="hljs-built_in">super</span>(PositionalEncoding, self).__init__()<br>        self.scaling_factor = math.sqrt(d_model)<br>        self.p = torch.zeros((<span class="hljs-number">1</span>, max_len, d_model))<br>        index = torch.arange(max_len, dtype=torch.float32).reshape(<br>            -<span class="hljs-number">1</span>, <span class="hljs-number">1</span>) / torch.<span class="hljs-built_in">pow</span>(<span class="hljs-number">10000</span>, torch.arange(<br>            <span class="hljs-number">0</span>, d_model, <span class="hljs-number">2</span>, dtype=torch.float32) / d_model)<br>        self.p[:, :, <span class="hljs-number">0</span>::<span class="hljs-number">2</span>] = torch.sin(index)<br>        self.p[:, :, <span class="hljs-number">1</span>::<span class="hljs-number">2</span>] = torch.cos(index)<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, <span class="hljs-built_in">input</span></span>):<br><br>        device = <span class="hljs-built_in">input</span>.device<br>        seq_len = <span class="hljs-built_in">input</span>.shape[<span class="hljs-number">1</span>]<br>        output = <span class="hljs-built_in">input</span> * self.scaling_factor + self.p[:, :seq_len].to(device)<br><br>        <span class="hljs-keyword">return</span> output<br></code></pre></td></tr></table></figure>
+
+<h3 id="Encoder"><a href="#Encoder" class="headerlink" title="Encoder"></a>Encoder</h3><p>The encoder is composed of a stack of identical layers. Each layer has two sub-layers. The first is a multi-head self-attention mechanism, and the second is a simple, position-wise fully connected feed-forward network. A residual connection is employed around each of the two sub-layers, followed by layer normalization. That is, the output of each sub-layer is $\text{LayerNorm}(x+\text{Sublayer}(x))$, where $\text{Sublayer}(x)$ is the function implemented by the sub-layer itself. </p>
+<p>Dropout is applied to the output of each sub-layer, before it is added to the sub-layer input and normalized. In addition,  dropout is applied to the sums of the embeddings and the positional encodings in both the encoder and decoder stacks.</p>
+<p>The Pytorch implementation is</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">EncoderBlock</span>(nn.Module):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, d_model, n_heads, d_ff, dropout</span>):<br>        <span class="hljs-built_in">super</span>(EncoderBlock, self).__init__()<br>        self.sublayer_1 = MultiHeadAttention(d_model, n_heads)<br>        self.drop_1 = nn.Dropout(dropout)<br>        self.norm_1 = nn.LayerNorm(d_model)<br>        self.sublayer_2 = FFN(d_model, d_ff)<br>        self.drop_2 = nn.Dropout(dropout)<br>        self.norm_2 = nn.LayerNorm(d_model)<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, src, src_mask=<span class="hljs-literal">None</span></span>):<br><br>        o1 = self.sublayer_1(src, src, src, src_mask)<br>        src = self.norm_1(src + self.drop_1(o1))<br><br>        o2 = self.sublayer_2(src)<br>        src = self.norm_2(src + self.drop_2(o2))<br><br>        <span class="hljs-keyword">return</span> src<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Encoder</span>(nn.Module):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, num_blocks, vocab_size, max_len, d_model, n_heads, d_ff, dropout</span>):<br>        <span class="hljs-built_in">super</span>(Encoder, self).__init__()<br>        self.ebd = nn.Embedding(vocab_size, d_model, padding_idx=<span class="hljs-number">0</span>)<br>        self.pos_encode = PositionalEncoding(max_len, d_model)<br>        self.drop = nn.Dropout(dropout)<br>        self.blks = nn.ModuleList([EncoderBlock(d_model, n_heads, d_ff, dropout) <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(num_blocks)])<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, src, src_mask=<span class="hljs-literal">None</span></span>):<br><br>        src = self.drop(self.pos_encode(self.ebd(src)))<br>        <span class="hljs-keyword">for</span> blk <span class="hljs-keyword">in</span> self.blks:<br>            src = blk(output, src_mask)<br><br>        <span class="hljs-keyword">return</span> src<br></code></pre></td></tr></table></figure>
+
+<h3 id="Decoder"><a href="#Decoder" class="headerlink" title="Decoder"></a>Decoder</h3><p>The decoder is also composed of a stack of identical layers. In addition to the two sub-layers in each encoder layer, the decoder inserts a third sub-layer, which performs multi-head attention over the output of the encoder stack. The self-attention sub-layer in the decoder stack is modified to prevent positions from attending to subsequent positions. This masking, combined with fact that the output embeddings are offset by one position, ensures that the predictions for position $i$ can depend only on the known outputs at positions less than $i$.</p>
+<p>The Pytorch implementation is</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">DecoderBlock</span>(nn.Module):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, d_model, n_heads, d_ff, dropout</span>):<br>        <span class="hljs-built_in">super</span>(DecoderBlock, self).__init__()<br>        self.sublayer_1 = MultiHeadAttention(d_model, n_heads)<br>        self.drop_1 = nn.Dropout(dropout)<br>        self.norm_1 = nn.LayerNorm(d_model)<br>        self.sublayer_2 = MultiHeadAttention(d_model, n_heads)<br>        self.drop_2 = nn.Dropout(dropout)<br>        self.norm_2 = nn.LayerNorm(d_model)<br>        self.sublayer_3 = FFN(d_model, d_ff)<br>        self.drop_3 = nn.Dropout(dropout)<br>        self.norm_3 = nn.LayerNorm(d_model)<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, src, tgt, src_mask=<span class="hljs-literal">None</span>, tgt_mask=<span class="hljs-literal">None</span></span>):<br><br>        o1 = self.sublayer_1(tgt, tgt, tgt, tgt_mask)<br>        tgt = self.norm_1(tgt + self.drop_1(o1))<br><br>        o2 = self.sublayer_2(src, src, tgt, src_mask)<br>        tgt = self.norm_2(tgt + self.drop_2(o2))<br><br>        o3 = self.sublayer_3(tgt)<br>        tgt = self.norm_3(tgt + self.drop_3(o3))<br><br>        <span class="hljs-keyword">return</span> tgt<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Dencoder</span>(nn.Module):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, num_blocks, vocab_size, max_len, d_model, n_heads, d_ff, dropout</span>):<br>        <span class="hljs-built_in">super</span>(Dencoder, self).__init__()<br>        self.ebd = nn.Embedding(vocab_size, d_model)<br>        self.pos_encode = PositionalEncoding(max_len, d_model)<br>        self.drop = nn.Dropout(dropout)<br>        self.blks = nn.ModuleList([DecoderBlock(d_model, n_heads, d_ff, dropout) <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(num_blocks)])<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, src, tgt, src_mask=<span class="hljs-literal">None</span>, tgt_mask=<span class="hljs-literal">None</span></span>):<br><br>        tgt = self.drop(self.pos_encode(self.ebd(tgt)))<br>        <span class="hljs-keyword">for</span> blk <span class="hljs-keyword">in</span> self.blks:<br>            tgt = blk(src, tgt, src_mask, tgt_mask)<br><br>        <span class="hljs-keyword">return</span> tgt<br></code></pre></td></tr></table></figure>
+
+<h3 id="Transformer-Pytorch-Implementation"><a href="#Transformer-Pytorch-Implementation" class="headerlink" title="Transformer Pytorch Implementation"></a>Transformer Pytorch Implementation</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Transformer</span>(nn.Module):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, num_blocks, src_vocab_size, tar_vocab_size, src_max_len, tar_max_len, d_model, n_heads, d_ff, dropout</span>):<br>        <span class="hljs-built_in">super</span>(Transformer, self).__init__()<br>        self.encoder = Encoder(num_blocks, src_vocab_size, src_max_len, d_model, n_heads, d_ff, dropout)<br>        self.decoder = Decoder(num_blocks, tar_vocab_size, tar_max_len, d_model, n_heads, d_ff, dropout)<br>        self.fc = nn.Linear(d_model, tar_vocab_size)<br>        <span class="hljs-comment"># weight sharing</span><br>        self.fc.weight = self.decoder.ebd.weight<br>        <span class="hljs-keyword">if</span> src_vocab_size == tar_vocab_size: <br>            self.encoder.ebd.weight = self.decoder.ebd.weight<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, src, tgt, src_mask=<span class="hljs-literal">None</span>, tgt_mask=<span class="hljs-literal">None</span></span>):<br><br>        <span class="hljs-keyword">if</span> src_mask <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span>:<br>            src_mask = src &gt; <span class="hljs-number">0</span><br>        <span class="hljs-keyword">if</span> tgt_mask <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span>:<br>            tgt_mask = tgt &gt; <span class="hljs-number">0</span><br><br>        enc_output = self.encoder(src, src_mask)<br>        dec_output = self.decoder(enc_output, tgt, src_mask, tgt_mask)<br><br>        output = F.softmax(self.fc(dec_output[:, <span class="hljs-number">0</span>]), dim=-<span class="hljs-number">1</span>)<br><br>        <span class="hljs-keyword">return</span> output<br></code></pre></td></tr></table></figure>
+
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1706.03762">Vaswani, Ashish, et al. “Attention is all you need.” Advances in neural information processing systems 30 (2017).</a>
+<a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://d2l.ai/index.html">Journal of Machine Learning Research 21 (23), 1-7, 2020. 183, 2020. Dive into deep learning. 2020. A Zhang, ZC Lipton, M Li, AJ Smola.
+</a>
+<a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Papers/" class="category-chain-item">Papers</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Deep-Learning/">#Deep Learning</a>
+      
+        <a href="/tags/Natural-Language-Processing/">#Natural Language Processing</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Transformer</div>
+      <div>https://iks-ran.github.io/2023/07/19/transformer/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>iks-ran</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>July 19, 2023</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/07/26/bert/" title="BERT:Bidirectional Encoder Representations from Transformers">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">BERT:Bidirectional Encoder Representations from Transformers</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/07/16/tokenization-embedding/" title="Tokenization And Embedding">
+                        <span class="hidden-mobile">Tokenization And Embedding</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
+    
+      <script type="text/javascript">
+        var disqus_config = function() {
+          this.page.url = 'https://iks-ran.github.io/2023/07/19/transformer/';
+          this.page.identifier = '/2023/07/19/transformer/';
+        };
+        Fluid.utils.loadComments('#disqus_thread', function() {
+          var d = document, s = d.createElement('script');
+          s.src = '//' + 'fluid' + '.disqus.com/embed.js';
+          s.setAttribute('data-timestamp', new Date());
+          (d.head || d.body).appendChild(s);
+        });
+      </script>
+    
+    <noscript>Please enable JavaScript to view the comments</noscript>
+  </div>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

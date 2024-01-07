@@ -1,0 +1,794 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/pageicon.png">
+  <link rel="icon" href="/img/pageicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="iks-ran">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="3D Gaussian SplattingAbstract Radiance Field methods have recently revolutionized novel-view synthesis of scenes captured with multiple photos or videos. However, achieving high visual quality still r">
+<meta property="og:type" content="article">
+<meta property="og:title" content="3D Gaussian Splatting">
+<meta property="og:url" content="https://iks-ran.github.io/2023/10/17/3d_gaussian_splatting/index.html">
+<meta property="og:site_name" content="iks-ran">
+<meta property="og:description" content="3D Gaussian SplattingAbstract Radiance Field methods have recently revolutionized novel-view synthesis of scenes captured with multiple photos or videos. However, achieving high visual quality still r">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://iks-ran.github.io/img/blogs/231017-3D_Gaussian_Splatting/1.png">
+<meta property="article:published_time" content="2023-10-17T11:43:26.872Z">
+<meta property="article:modified_time" content="2023-10-24T05:46:23.989Z">
+<meta property="article:author" content="iks-ran">
+<meta property="article:tag" content="Deep Learning">
+<meta property="article:tag" content="AIGC">
+<meta property="article:tag" content="Computer Vision">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://iks-ran.github.io/img/blogs/231017-3D_Gaussian_Splatting/1.png">
+  
+  
+  
+  <title>3D Gaussian Splatting - iks-ran</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"iks-ran.github.io","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>iks-ran</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/blogs/231017-3D_Gaussian_Splatting/1.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="3D Gaussian Splatting"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-10-17 19:43" pubdate>
+          October 17, 2023 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          8k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          67 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">3D Gaussian Splatting</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="3D-Gaussian-Splatting"><a href="#3D-Gaussian-Splatting" class="headerlink" title="3D Gaussian Splatting"></a>3D Gaussian Splatting</h2><h3 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h3><blockquote>
+<p>Radiance Field methods have recently revolutionized novel-view synthesis of scenes captured with multiple photos or videos. However, achieving high visual quality still requires neural networks that are costly to train and render, while recent faster methods inevitably trade off speed for quality. For unbounded and complete scenes (rather than isolated objects) and 1080p resolution rendering, no current method can achieve real-time display rates. We introduce three key elements that allow us to achieve state-of-the-art visual quality while maintaining competitive training times and importantly allow high-quality real-time ( ≥ 30 fps) novel-view synthesis at 1080p resolution. First, starting from sparse points produced during camera calibration, we represent the scene with 3D Gaussians that preserve desirable properties of continuous volumetric radiance fields for scene optimization while avoiding unnecessary computation in empty space; Second, we perform interleaved optimization&#x2F;density control of the 3D Gaussians, notably optimizing anisotropic covariance to achieve an accurate representation of the scene; Third, we develop a fast visibility-aware rendering algorithm that supports anisotropic splatting and both accelerates training and allows real-time rendering. We demonstrate state-of-the-art visual quality and real-time rendering on several established datasets.</p>
+</blockquote>
+<h3 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h3><figure>
+    <img src="/img/blogs/231017-3D_Gaussian_Splatting/1.png" srcset="/img/loading.gif" lazyload>
+    <figcaption>Fig.1 Overview</figcaption>
+</figure>
+
+<blockquote>
+<p>Optimization starts with the sparse SfM point cloud and creates a set of 3D Gaussians. We then optimize and adaptively control the density of this set of Gaussians. During optimization we use our fast tile-based renderer, allowing competitive training times compared to SOTA fast radiance field methods. Once trained, our renderer allows real-time navigation for a wide variety of scenes.</p>
+</blockquote>
+<p>Starting from a set of images of a static scene together with the corresponding cameras calibrated by SfM which produces a sparse point cloud as a sideeffect, a set of 3D Gaussians that allows a very flexible optimization regime is defined by a position (mean), covariance matrix and opacity $\alpha$. This results in a reasonably compact representation of the 3D scene, in part because highly anisotropic volumetric splats can be used to represent fine structures compactly. The directional appearance component (color) of the radiance field is represented via spherical harmonics (SH), following standard practice. The algorithm proceeds to create the radiance field representation via a sequence of optimization steps of 3D Gaussian parameters, i.e., position, covariance, $\alpha$ and SH coefficients interleaved with operations for adaptive control of the Gaussian density. The key to the efficiency is the tile-based rasterizer that allows $\alpha$-blending of anisotropic splats, respecting visibility order thanks to fast sortingand a fast backward pass by tracking accumulated $\alpha$ values, without a limit on the number of Gaussians that can receive gradients.</p>
+<h3 id="Point-Based-Rendering-and-Radiance-Fields"><a href="#Point-Based-Rendering-and-Radiance-Fields" class="headerlink" title="Point-Based Rendering and Radiance Fields"></a>Point-Based Rendering and Radiance Fields</h3><p>Point-based $\alpha$-blending and NeRF-style volumetric rendering share essentially the same image formation model. Specifically, the color $C$ is given by volumetric rendering along a ray:</p>
+<p>$$<br>C&#x3D;\sum_{i&#x3D;1}^{N}T_{i}(1-\exp(-\sigma_{i}\delta_{i}))\mathbf{c}_{i}\hskip 5.0pt\text{ with }\hskip 5.0ptT_{i}&#x3D;\exp\left(-\sum_{j&#x3D;1}^{i-1}\sigma_{j}\delta_{j}\right)<br>$$</p>
+<p>where samples of density $\sigma$, transmittance $T$ , and color $\mathbf{c}$ are taken along the ray with intervals $\delta_i$ . This can be re-written as</p>
+<p>$$<br>C&#x3D;\sum_{i&#x3D;1}^{N}T_{i}\alpha_{i}\mathbf{c}_{i}<br>$$</p>
+<p>with</p>
+<p>$$<br>\alpha_{i}&#x3D;(1-\exp(-\sigma_{i}\delta_{i}))\hskip 5.0pt\text{and}\hskip 5.0ptT_{i}&#x3D;\prod_{j&#x3D;1}^{i-1}(1-\alpha_{i})<br>$$</p>
+<p>A typical neural point-based approach computes the color $C$ of a pixel by blending $\mathcal{N}$ ordered points overlapping the pixel</p>
+<p>$$<br>C&#x3D;\sum_{i\in\mathcal{N}}\mathbf{c}_{i}\alpha_{i}\prod_{j&#x3D;1}^{i-1}(1-\alpha_{j})<br>$$</p>
+<p>where $\mathbf{c}_i$ is the color of each point and $\alpha_i$ is given by evaluating a 2D Gaussian with covariance $\Sigma$ multiplied with a learned per-point opacity.</p>
+<p>Although the image formation model is the same, the rendering algorithm is very different. NeRFs are a continuous representation implicitly representing empty&#x2F;occupied space; expensive random sampling is required to find the samples with consequent noise and computational expense. In contrast, points are an unstructured, discrete representation that is flexible enough to allow creation, destruction, and displacement of geometry similar to NeRF. This is achieved by optimizing opacity and positions, while avoiding the shortcomings of a full volumetric representation.</p>
+<h3 id="Differentiable-3D-Gaussian-Splatting"><a href="#Differentiable-3D-Gaussian-Splatting" class="headerlink" title="Differentiable 3D Gaussian Splatting"></a>Differentiable 3D Gaussian Splatting</h3><p>The 3D Gaussians are defined by a full 3D covariance matrix $\Sigma$ defined in world space centered at point (mean) $\mu$ and then multiplied by $\alpha$ in blending process.</p>
+<p>$$<br>G(x) &#x3D; e^{-\frac{1}{2}(x)^T\Sigma ^{-1}(x)}<br>$$</p>
+<p>To project the 3D Gaussians to 2D for rendering, given a viewing transformation $W$, the covariance matrix $\Sigma^{\prime}$ in camera coordinates is given as follows</p>
+<p>$$<br>\Sigma^{\prime} &#x3D; JW\Sigma W^TJ^T<br>$$</p>
+<p>where $J$ is the Jacobian of the affine approximation of the projective transformation. As Gradient descent cannot be easily constrained to produce valid covariance matrices which have physical meaning only when they are positive semi-definite, given a scaling matrix $S$ and rotation matrix $R$, the corresponding $\Sigma$ is defined as</p>
+<p>$$<br>\Sigma &#x3D; RSS^TR^T<br>$$</p>
+<p>To allow independent optimization of both factors, $S$ and $R$ are stored separately: a 3D vector $s$ for scaling and a quaternion $q$ to represent rotation. These can be trivially converted to their respective matrices and combined, making sure to normalize $q$ to obtain a valid unit quaternion.</p>
+<h3 id="Fast-Differentiable-Rasterizer-for-Gaussians"><a href="#Fast-Differentiable-Rasterizer-for-Gaussians" class="headerlink" title="Fast Differentiable Rasterizer for Gaussians"></a>Fast Differentiable Rasterizer for Gaussians</h3><figure>
+    <img src="/img/blogs/231017-3D_Gaussian_Splatting/2.png" srcset="/img/loading.gif" lazyload width=400>
+    <figcaption>Fig.2 GPU software rasterization of 3D Gaussians</figcaption>
+</figure>
+
+<ol>
+<li>Divide the entire image into $16\times 16$ tiles, and select 3D Gaussians that are visible and have a confidence over 0.99 in each tile’s view frustum.</li>
+<li>Assign a key for each splats instance with up to 64 bits where the lower 32 bits encode its projected depth and the higher bits encode the index of the overlapped tile.</li>
+<li>Sort Gaussian splats by key to get the Gaussian list of each tile.</li>
+<li>Start a thread block for each tile. Each thread block first cooperatively loads the of Gaussian splats into shared memory, and then for a given pixel, accumulates the color and value by traversing the list from front to back. </li>
+<li>When the preset saturation is reached in a pixel (i.e. equal to 1), the corresponding thread stops running.</li>
+<li>At regular intervals, threads in the tile are queried, and processing of the entire tile is terminated when all pixels are saturated (i.e. become 1).</li>
+</ol>
+<h3 id="Optimization-with-Adaptive-Density-Control-of-3D-Gaussians"><a href="#Optimization-with-Adaptive-Density-Control-of-3D-Gaussians" class="headerlink" title="Optimization with Adaptive Density Control of 3D Gaussians"></a>Optimization with Adaptive Density Control of 3D Gaussians</h3><h4 id="Adaptive-Control-of-Gaussians"><a href="#Adaptive-Control-of-Gaussians" class="headerlink" title="Adaptive Control of Gaussians"></a>Adaptive Control of Gaussians</h4><p>Due to the ambiguity of 3D to 2D projection, geometry may be placed incorrectly. Therefore, optimization requires the ability to create geometry and destroy or move it if it is not in the correct position. The quality of the covariance parameters of a 3D Gaussian distribution is critical to the compactness of the representation, since large uniform regions can be captured with a small number of large anisotropic Gaussian distributions.</p>
+<p>To be able to transition from an initially sparse collection of 3D Gaussians to a denser collection that better represents the scene and has the correct parameters, the number of 3D Gaussians and their density per unit volume are controlled adaptively. The control algorithm densifies every 100 iterations and remove any Gaussians that are essentially transparent.</p>
+<figure>
+    <img src="/img/blogs/231017-3D_Gaussian_Splatting/3.png" srcset="/img/loading.gif" lazyload>
+    <figcaption>Fig.3 Adaptive Control of Gaussians</figcaption>
+</figure>
+
+<p>See Fig.3, for a small Gaussian in the unreconstructed region, the new geometry is created by cloning the Gaussian and moving it along the position gradient direction. Large Gaussians in regions with high variance need to be split into smaller Gaussians. Two new Gaussian distributions replace the original large Gaussian distribution, and the scaling factor is determined experimentally to divide their scales, using the original Gaussian as the sampling PDF to initialize their positions.</p>
+<p>Floaters near the camera tend to appear during optimization, so the way to control the growth of Gaussians is to set $\alpha$ close to 0 every 3000 iterations</p>
+<h4 id="Optimization"><a href="#Optimization" class="headerlink" title="Optimization"></a>Optimization</h4><p>A Sigmoid activation function is used to constrain $\alpha$ in the range of $[0 - 1)$ , and an exponential activation function is used for the covariance.The initial covariance matrix is estimated as an isotropic Gaussian matrix with axes equal to the mean distance to the nearest three points. The loss function is a combination of L1 and D-SSIM terms </p>
+<p>$$<br>\mathcal{L} &#x3D; (1 - \lambda)\mathcal{L}_1 + \lambda\mathcal{L}_{\text{D-SSIM}}<br>$$</p>
+<figure>
+    <img src="/img/blogs/231017-3D_Gaussian_Splatting/4.png" srcset="/img/loading.gif" lazyload width=400>
+    <figcaption>Fig.4 Optimization</figcaption>
+</figure>
+
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2308.04079">Kerbl, B., Kopanas, G., Leimkuehler, T., &amp; Drettakis, G. (2023). 3D Gaussian Splatting for Real-Time Radiance Field Rendering. ACM Transactions on Graphics (TOG), 42, 1 - 14.</a>
+<a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/654627437">3D Gaussian Splatting for Real-Time Radiance Field Rendering 笔记</a>
+<a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:3" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/661363274">论文简析：3D Gaussian Splatting !!!</a>
+<a href="#fnref:3" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:4" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/655325345">3D Gaussian Splatting笔记</a>
+<a href="#fnref:4" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:5" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1uV4y1Y7cA/?share_source=copy_web&vd_source=bd133237b66721b62ed05d453aa32bac">【论文讲解】用点云结合3D高斯构建辐射场，成为快速训练、实时渲染的新SOTA！</a>
+<a href="#fnref:5" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Papers/" class="category-chain-item">Papers</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Deep-Learning/">#Deep Learning</a>
+      
+        <a href="/tags/AIGC/">#AIGC</a>
+      
+        <a href="/tags/Computer-Vision/">#Computer Vision</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>3D Gaussian Splatting</div>
+      <div>https://iks-ran.github.io/2023/10/17/3d_gaussian_splatting/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>iks-ran</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>October 17, 2023</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/01/07/t2i_tips/" title="Text to Images 使用记录">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Text to Images 使用记录</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/10/16/HiFA/" title="HiFA">
+                        <span class="hidden-mobile">HiFA</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
+    
+      <script type="text/javascript">
+        var disqus_config = function() {
+          this.page.url = 'https://iks-ran.github.io/2023/10/17/3d_gaussian_splatting/';
+          this.page.identifier = '/2023/10/17/3d_gaussian_splatting/';
+        };
+        Fluid.utils.loadComments('#disqus_thread', function() {
+          var d = document, s = d.createElement('script');
+          s.src = '//' + 'fluid' + '.disqus.com/embed.js';
+          s.setAttribute('data-timestamp', new Date());
+          (d.head || d.body).appendChild(s);
+        });
+      </script>
+    
+    <noscript>Please enable JavaScript to view the comments</noscript>
+  </div>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

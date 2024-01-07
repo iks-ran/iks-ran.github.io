@@ -1,0 +1,771 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/pageicon.png">
+  <link rel="icon" href="/img/pageicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="iks-ran">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Review of PointNetOne of the most prominent shortcomings of PointNet is that PointNet does not capture local structures induced by the metric space points live in, because PointNet only extract featur">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PointNet++:Aggregate Local Features with Sampling And Grouping">
+<meta property="og:url" content="https://iks-ran.github.io/2023/07/06/PointNet++/index.html">
+<meta property="og:site_name" content="iks-ran">
+<meta property="og:description" content="Review of PointNetOne of the most prominent shortcomings of PointNet is that PointNet does not capture local structures induced by the metric space points live in, because PointNet only extract featur">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://iks-ran.github.io/img/blogs/230705-pointnet1+2/3.png">
+<meta property="article:published_time" content="2023-07-06T08:23:28.193Z">
+<meta property="article:modified_time" content="2023-07-15T06:56:03.271Z">
+<meta property="article:author" content="iks-ran">
+<meta property="article:tag" content="Computer Vision">
+<meta property="article:tag" content="Point Cloud">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://iks-ran.github.io/img/blogs/230705-pointnet1+2/3.png">
+  
+  
+  
+  <title>PointNet++:Aggregate Local Features with Sampling And Grouping - iks-ran</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"iks-ran.github.io","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>iks-ran</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/blogs/230705-pointnet1+2/3.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="PointNet++:Aggregate Local Features with Sampling And Grouping"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-07-06 16:23" pubdate>
+          July 6, 2023 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          9.5k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          79 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">PointNet++:Aggregate Local Features with Sampling And Grouping</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="Review-of-PointNet"><a href="#Review-of-PointNet" class="headerlink" title="Review of PointNet"></a>Review of PointNet</h2><p>One of the most prominent shortcomings of PointNet is that PointNet does not capture local structures induced by the metric space points live in, because PointNet only extract features on single point, or use max pool to aggregate global points. This limits its ability to recognize fine-grained patterns and generalizability to complex scenes and has led to the poor performance of PointNet in segmentation, especially in partial segmentation scenarios.</p>
+<h2 id="PointNet"><a href="#PointNet" class="headerlink" title="PointNet++"></a>PointNet++</h2><figure>
+    <img src="/img/blogs/230705-pointnet1+2/3.png" srcset="/img/loading.gif" lazyload alt="Fig.1 Overrall of PointNet++">
+    <figcaption>Fig.1 Overrall of PointNet++</figcaption>
+</figure>
+
+<blockquote>
+<p>Figure 2: Illustration of our hierarchical feature learning architecture and its application for set<br>segmentation and classification using points in 2D Euclidean space as an example. Single scale point<br>grouping is visualized here. For details on density adaptive grouping, see Fig. 3</p>
+</blockquote>
+<p>While PointNet uses a single max pooling operation to aggregate the whole point set, PointNet++ builds a hierarchical grouping of points and progressively abstract larger and larger local regions along the hierarchy based on CNNs. As show in Fig.1, the whole PointNeet++ can be divided into three parts, set abstraction, classification and segmentation. Here we mainly discuss set abstraction and segmentation (as classification is nearly the same as that in PointNet).</p>
+<h3 id="Set-abstraction"><a href="#Set-abstraction" class="headerlink" title="Set abstraction"></a>Set abstraction</h3><p>The set abstraction level is made of three key layers: Sampling layer, Grouping layer and PointNet layer. The Sampling layer selects a set of points from input points use FPS, which defines the centroids of local regions. Grouping layer then constructs local region sets by finding “neighboring” points around the centroids. PointNet layer uses a mini-PointNet to encode local region patterns into feature vectors. A set abstraction level takes an $N\times(d + C)$ tensot as input that is from $N$ points with d-dim coordinates and C-dim point feature. It outputs an $N’\times (d + C’ )$ tensor of $N’$ subsampled points with d-dim coordinates and new $C’$-dim feature vectors summarizing local context.</p>
+<p>Here’s the code of this layer:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><code class="hljs Python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">PointNetSetAbstraction</span>(nn.Module):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, npoint, radius, nsample, in_channel, mlp, group_all</span>):<br>        <span class="hljs-built_in">super</span>(PointNetSetAbstraction, self).__init__()<br>        self.npoint = npoint<br>        self.radius = radius<br>        self.nsample = nsample<br>        self.mlp_convs = nn.ModuleList()<br>        self.mlp_bns = nn.ModuleList()<br>        last_channel = in_channel<br>        <span class="hljs-keyword">for</span> out_channel <span class="hljs-keyword">in</span> mlp:<br>            self.mlp_convs.append(nn.Conv2d(last_channel, out_channel, <span class="hljs-number">1</span>))<br>            self.mlp_bns.append(nn.BatchNorm2d(out_channel))<br>            last_channel = out_channel<br>        self.group_all = group_all<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, xyz, points</span>):<br>        <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">        Input:</span><br><span class="hljs-string">            xyz: input points position data, [B, C, N]</span><br><span class="hljs-string">            points: input points data, [B, D, N]</span><br><span class="hljs-string">        Return:</span><br><span class="hljs-string">            new_xyz: sampled points position data, [B, C, S]</span><br><span class="hljs-string">            new_points_concat: sample points feature data, [B, D&#x27;, S]</span><br><span class="hljs-string">        &quot;&quot;&quot;</span><br>        xyz = xyz.permute(<span class="hljs-number">0</span>, <span class="hljs-number">2</span>, <span class="hljs-number">1</span>)<br>        <span class="hljs-keyword">if</span> points <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span>:<br>            points = points.permute(<span class="hljs-number">0</span>, <span class="hljs-number">2</span>, <span class="hljs-number">1</span>)<br><br>        <span class="hljs-keyword">if</span> self.group_all:<br>            new_xyz, new_points = sample_and_group_all(xyz, points)<br>        <span class="hljs-keyword">else</span>:<br>            new_xyz, new_points = sample_and_group(self.npoint, self.radius, self.nsample, xyz, points)<br>        <span class="hljs-comment"># new_xyz: sampled points position data, [B, npoint, C]</span><br>        <span class="hljs-comment"># new_points: sampled points data, [B, npoint, nsample, C+D]</span><br>        new_points = new_points.permute(<span class="hljs-number">0</span>, <span class="hljs-number">3</span>, <span class="hljs-number">2</span>, <span class="hljs-number">1</span>) <span class="hljs-comment"># [B, C+D, nsample,npoint]</span><br>        <span class="hljs-keyword">for</span> i, conv <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(self.mlp_convs):<br>            bn = self.mlp_bns[i]<br>            new_points =  F.relu(bn(conv(new_points)))<br><br>        new_points = torch.<span class="hljs-built_in">max</span>(new_points, <span class="hljs-number">2</span>)[<span class="hljs-number">0</span>]<br>        new_xyz = new_xyz.permute(<span class="hljs-number">0</span>, <span class="hljs-number">2</span>, <span class="hljs-number">1</span>)<br>        <span class="hljs-keyword">return</span> new_xyz, new_points<br></code></pre></td></tr></table></figure>
+<h4 id="Grouping-layer"><a href="#Grouping-layer" class="headerlink" title="Grouping layer"></a>Grouping layer</h4><p>The input to this layer is a point set of size $N\times(d + C)$ and the coordinates of a set of centroids of size $N’\times d$. The output are groups of point sets of size $N’\times K \times (d + C)$, where each group corresponds to a local region and $K$ is the number of points sambled by ball query or kNN in the neighborhood of centroid points. Ball query finds all points that are within a radius to the query point (an upper limit of $K$ is set in implementation, if number of points is less than $K$, resample the centroid point). Compared with kNN, ball query’s local neighborhood guarantees a fixed region scale thus making local region feature more generalizable across space, which is preferred for tasks requiring local pattern recognition. $K$ varies across groups but the succeeding PointNet layer is able to convert flexible number of points into a fixed length local region feature vector.</p>
+<p>Here’s the code of ball query:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs Python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">query_ball_point</span>(<span class="hljs-params">radius, nsample, xyz, new_xyz</span>):<br>    <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    Input:</span><br><span class="hljs-string">        radius: local region radius</span><br><span class="hljs-string">        nsample: max sample number in local region</span><br><span class="hljs-string">        xyz: all points, [B, N, 3]</span><br><span class="hljs-string">        new_xyz: query points, [B, S, 3]</span><br><span class="hljs-string">    Return:</span><br><span class="hljs-string">        group_idx: grouped points index, [B, S, nsample]</span><br><span class="hljs-string">    &quot;&quot;&quot;</span><br>    device = xyz.device<br>    B, N, C = xyz.shape<br>    _, S, _ = new_xyz.shape<br>    group_idx = torch.arange(N, dtype=torch.long).to(device).view(<span class="hljs-number">1</span>, <span class="hljs-number">1</span>, N).repeat([B, S, <span class="hljs-number">1</span>])<br>    sqrdists = square_distance(new_xyz, xyz)<br>    group_idx[sqrdists &gt; radius ** <span class="hljs-number">2</span>] = N<br>    group_idx = group_idx.sort(dim=-<span class="hljs-number">1</span>)[<span class="hljs-number">0</span>][:, :, :nsample]<br>    group_first = group_idx[:, :, <span class="hljs-number">0</span>].view(B, S, <span class="hljs-number">1</span>).repeat([<span class="hljs-number">1</span>, <span class="hljs-number">1</span>, nsample])<br>    mask = group_idx == N<br>    group_idx[mask] = group_first[mask]<br>    <span class="hljs-keyword">return</span> group_idx<br></code></pre></td></tr></table></figure>
+<h4 id="PointNet-layer"><a href="#PointNet-layer" class="headerlink" title="PointNet layer"></a>PointNet layer</h4><p>In this layer, the input are $N’$ local regions of points with data size $N’\times K \times (d + C)$. Each local region in the output is abstracted by its centroid and local feature that encodes the centroid’s neighborhood. Output data size is $N’\times K \times (d + C’)$. The coordinates of points in a local region are firstly translated into a local frame relative to the centroid point: $x^{(j)}_i &#x3D; x^{(j)}_i - \hat{x}^{(j)}$ for $i &#x3D; 1, 2, …, K$ and $j &#x3D; 1, 2, …, d$ where $\hat{x}$ is the coordinate of the centroid. By using relative coordinates together with point features we can capture point-to-point relations in the local region.</p>
+<h4 id="MSG-and-MRG"><a href="#MSG-and-MRG" class="headerlink" title="MSG and MRG"></a>MSG and MRG</h4><figure>
+    <img src="/img/blogs/230705-pointnet1+2/4.png" srcset="/img/loading.gif" lazyload alt="Fig.2 MSG and MRG" width=300>
+    <figcaption>Fig.2 MSG and MRG</figcaption>
+</figure>
+
+<blockquote>
+<p>Figure 3: (a) Multi-scale cross-level adaptive scale selection grouping (MSG); (b) Multiresolution grouping (MRG).</p>
+</blockquote>
+<p>In the paper, the author conducted a comparative experiment to address the issue of PointNet’s poor performance on uneven point clouds. They used the original PointNet++ and found that its performance was not as good as PointNet in point clouds with uneven density. To improve the performance, PointNet++ introduces two solutions: Multi-Scale Grouping (MSG) and Multi-Resolution Grouping (MRG).</p>
+<p>MSG uses multiple scales (radius) in each grouping layer to determine the range of the domain, and each range is extracted from the PointNet layer feature and then integrated to obtain a new multi-scale feature.But due to compute for serveral times, the MSG approach is computationally expensive.</p>
+<p>Each feature of MRG consists of two parts: the features obtained by PointNet layer in the domain of this layer, and the features obtained by PointNet layer in the domain of the previous layer. When the point cloud density is uneven, different weights can be given to the left and right feature vectors by judging the point cloud density of the current patch. For example, when the density in the patch is too small, the points contained in the left eigenvector are more sparse, which is easily affected by undersampling, so the weight of the right eigenvector is increased.</p>
+<figure>
+    <img src="/img/blogs/230705-pointnet1+2/5.png" srcset="/img/loading.gif" lazyload alt="Fig.3 Exprements on MSG and MRG">
+    <figcaption>Fig.3 Exprements on MSG and MRG</figcaption>
+</figure>
+
+<blockquote>
+<p>Figure 4: Left: Point cloud with random point dropout. Right: Curve showing advantage of our density adaptive strategy in dealing with non-uniform density. DP means random input dropout during training; otherwise training is on uniformly dense points. See Sec.3.3 for details.</p>
+</blockquote>
+<p>It can be seen that MSG and MRG have no improvement in classification accuracy compared with SSG (single-scale), but when the point cloud is very sparse, using MSG can maintain good robustness. Random input dropout (DP) also greatly improves the robustness.</p>
+<h3 id="Segmentation"><a href="#Segmentation" class="headerlink" title="Segmentation"></a>Segmentation</h3><p>PointNet++ adopts a hierarchical propagation strategy with distance based interpolation and across level skip links. In a feature propagation level, PointNet++ propagates point features from $N_l \times (d + C)$ points to $N_{l-1}$ points where $N_{l-1}$ and $N_l$ (with $N_l \leq N_{l-1}$) are point set size of input and output of set abstraction level $l$. PointNet++ achieves feature propagation by interpolating feature values $f$ of $N_l$ points at coordinates of the $N_{l-1}$ points. Among the many choices for interpolation, PointNet++ uses inverse distance weighted average based on k nearest neighbors (as in following equation, in default $p &#x3D; 2, k &#x3D; 3$). The interpolated features on $N_{l-1}$ points are then concatenated with skip linked point features from the set abstraction level. Then the concatenated features are passed through a “unit pointnet”, which is similar to one-by-one convolution in CNNs. A few shared fully connected and ReLU layers are applied to update each point’s feature vector. The process is repeated until we have propagated features to the original set of points.<br>$$<br>f^{(j)}(x)&#x3D;\frac{\sum_{i&#x3D;1}^kw_i(x)f_i^{(i)}}{\sum_{i&#x3D;1}^kw_i(x)}\quad\text{where}\quad w_i(x)&#x3D;\frac{1}{d(x, x_i)^p}, j&#x3D;1,2,…,C<br>$$</p>
+<p>Here’s the code:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><code class="hljs Python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">PointNetFeaturePropagation</span>(nn.Module):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, in_channel, mlp</span>):<br>        <span class="hljs-built_in">super</span>(PointNetFeaturePropagation, self).__init__()<br>        self.mlp_convs = nn.ModuleList()<br>        self.mlp_bns = nn.ModuleList()<br>        last_channel = in_channel<br>        <span class="hljs-keyword">for</span> out_channel <span class="hljs-keyword">in</span> mlp:<br>            self.mlp_convs.append(nn.Conv1d(last_channel, out_channel, <span class="hljs-number">1</span>))<br>            self.mlp_bns.append(nn.BatchNorm1d(out_channel))<br>            last_channel = out_channel<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, xyz1, xyz2, points1, points2</span>):<br>        <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">        Input:</span><br><span class="hljs-string">            xyz1: input points position data, [B, C, N]</span><br><span class="hljs-string">            xyz2: sampled input points position data, [B, C, S]</span><br><span class="hljs-string">            points1: input points data, [B, D, N]</span><br><span class="hljs-string">            points2: input points data, [B, D, S]</span><br><span class="hljs-string">        Return:</span><br><span class="hljs-string">            new_points: upsampled points data, [B, D&#x27;, N]</span><br><span class="hljs-string">        &quot;&quot;&quot;</span><br>        xyz1 = xyz1.permute(<span class="hljs-number">0</span>, <span class="hljs-number">2</span>, <span class="hljs-number">1</span>)<br>        xyz2 = xyz2.permute(<span class="hljs-number">0</span>, <span class="hljs-number">2</span>, <span class="hljs-number">1</span>)<br><br>        points2 = points2.permute(<span class="hljs-number">0</span>, <span class="hljs-number">2</span>, <span class="hljs-number">1</span>)<br>        B, N, C = xyz1.shape<br>        _, S, _ = xyz2.shape<br><br>        <span class="hljs-keyword">if</span> S == <span class="hljs-number">1</span>:<br>            interpolated_points = points2.repeat(<span class="hljs-number">1</span>, N, <span class="hljs-number">1</span>)<br>        <span class="hljs-keyword">else</span>:<br>            dists = square_distance(xyz1, xyz2)<br>            dists, idx = dists.sort(dim=-<span class="hljs-number">1</span>)<br>            dists, idx = dists[:, :, :<span class="hljs-number">3</span>], idx[:, :, :<span class="hljs-number">3</span>]  <span class="hljs-comment"># [B, N, 3]</span><br><br>            dist_recip = <span class="hljs-number">1.0</span> / (dists + <span class="hljs-number">1e-8</span>)<br>            norm = torch.<span class="hljs-built_in">sum</span>(dist_recip, dim=<span class="hljs-number">2</span>, keepdim=<span class="hljs-literal">True</span>)<br>            weight = dist_recip / norm<br>            interpolated_points = torch.<span class="hljs-built_in">sum</span>(index_points(points2, idx) * weight.view(B, N, <span class="hljs-number">3</span>, <span class="hljs-number">1</span>), dim=<span class="hljs-number">2</span>)<br><br>        <span class="hljs-keyword">if</span> points1 <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span>:<br>            points1 = points1.permute(<span class="hljs-number">0</span>, <span class="hljs-number">2</span>, <span class="hljs-number">1</span>)<br>            new_points = torch.cat([points1, interpolated_points], dim=-<span class="hljs-number">1</span>)<br>        <span class="hljs-keyword">else</span>:<br>            new_points = interpolated_points<br><br>        new_points = new_points.permute(<span class="hljs-number">0</span>, <span class="hljs-number">2</span>, <span class="hljs-number">1</span>)<br>        <span class="hljs-keyword">for</span> i, conv <span class="hljs-keyword">in</span> <span class="hljs-built_in">enumerate</span>(self.mlp_convs):<br>            bn = self.mlp_bns[i]<br>            new_points = F.relu(bn(conv(new_points)))<br>        <span class="hljs-keyword">return</span> new_points<br></code></pre></td></tr></table></figure>
+
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1706.02413">Charles Ruizhongtai Qi, Li Yi, Hao Su, and Leonidas J. Guibas. Pointnet++: Deep hierarchical feature learning on point sets in a metric space. In NIPS, 2017.</a>
+<a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://github.com/yanx27/Pointnet_Pointnet2_pytorch">Pytorch_Pointnet_Pointnet2</a>
+<a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Papers/" class="category-chain-item">Papers</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Computer-Vision/">#Computer Vision</a>
+      
+        <a href="/tags/Point-Cloud/">#Point Cloud</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>PointNet++:Aggregate Local Features with Sampling And Grouping</div>
+      <div>https://iks-ran.github.io/2023/07/06/PointNet++/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>iks-ran</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>July 6, 2023</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/07/11/Normalization/" title="Normalization——Batch Norm, Layer Norm, Instance Norm and Group Norm">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Normalization——Batch Norm, Layer Norm, Instance Norm and Group Norm</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/07/05/PointNet/" title="PointNet:The Pioneer of Point Cloud Deep Learning">
+                        <span class="hidden-mobile">PointNet:The Pioneer of Point Cloud Deep Learning</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
+    
+      <script type="text/javascript">
+        var disqus_config = function() {
+          this.page.url = 'https://iks-ran.github.io/2023/07/06/PointNet++/';
+          this.page.identifier = '/2023/07/06/PointNet++/';
+        };
+        Fluid.utils.loadComments('#disqus_thread', function() {
+          var d = document, s = d.createElement('script');
+          s.src = '//' + 'fluid' + '.disqus.com/embed.js';
+          s.setAttribute('data-timestamp', new Date());
+          (d.head || d.body).appendChild(s);
+        });
+      </script>
+    
+    <noscript>Please enable JavaScript to view the comments</noscript>
+  </div>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

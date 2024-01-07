@@ -1,0 +1,775 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/pageicon.png">
+  <link rel="icon" href="/img/pageicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="iks-ran">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="SparseNeusAbstract We introduce SparseNeuS, a novel neural rendering based method for the task of surface reconstruction from multi-view images. This task becomes more difficult when only sparse image">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SparseNeuS">
+<meta property="og:url" content="https://iks-ran.github.io/2023/09/30/SparseNeus/index.html">
+<meta property="og:site_name" content="iks-ran">
+<meta property="og:description" content="SparseNeusAbstract We introduce SparseNeuS, a novel neural rendering based method for the task of surface reconstruction from multi-view images. This task becomes more difficult when only sparse image">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://iks-ran.github.io/img/blogs/230930-SparseNeus/1.png">
+<meta property="article:published_time" content="2023-09-30T12:55:55.287Z">
+<meta property="article:modified_time" content="2023-10-17T08:50:32.193Z">
+<meta property="article:author" content="iks-ran">
+<meta property="article:tag" content="Deep Learning">
+<meta property="article:tag" content="AIGC">
+<meta property="article:tag" content="Computer Vision">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://iks-ran.github.io/img/blogs/230930-SparseNeus/1.png">
+  
+  
+  
+  <title>SparseNeuS - iks-ran</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"iks-ran.github.io","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>iks-ran</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/blogs/230930-SparseNeus/1.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="SparseNeuS"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-09-30 20:55" pubdate>
+          September 30, 2023 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          12k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          100 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">SparseNeuS</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="SparseNeus"><a href="#SparseNeus" class="headerlink" title="SparseNeus"></a>SparseNeus</h2><h3 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h3><blockquote>
+<p>We introduce SparseNeuS, a novel neural rendering based method for the task of surface reconstruction from multi-view images. This task becomes more difficult when only sparse images are provided as input, a scenario where existing neural reconstruction approaches usually produce incomplete or distorted results. Moreover, their inability of generalizing to unseen new scenes impedes their application in practice. Contrarily, SparseNeuS can generalize to new scenes and work well with sparse images (as few as 2 or 3). SparseNeuS adopts signed distance function (SDF) as the surface representation, and learns generalizable priors from image features by introducing geometry encoding volumes for generic surface prediction. Moreover, several strategies are introduced to effectively leverage sparse views for high-quality reconstruction, including 1) a multi-level geometry reasoning framework to recover the surfaces in a coarse-to-fine manner; 2) a multi-scale color blending scheme for more reliable color prediction; 3) a consistency-aware fine-tuning scheme to control the inconsistent regions caused by occlusion and noise. Extensive experiments demonstrate that our approach not only outperforms the state-of-the-art methods, but also exhibits good efficiency, generalizability, and flexibility.</p>
+</blockquote>
+<h3 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h3><figure>
+    <img src="/img/blogs/230930-SparseNeus/1.png" srcset="/img/loading.gif" lazyload>
+    <figcaption>Fig.1 SparseNeuS</figcaption>
+</figure>
+
+<p>Given a few views with known camera parameters, SparseNeuS first constructs cascaded geometry encoding volumes that encode local geometry surface information, and recover surfaces from the volumes in a coarse-to-fine manner.  SparseNeuS secondly leverages a multi-scale color blending module to predict colors by aggregating information from input images, and then combines the estimated geometry with predicted colors to render synthesized views using volume rendering. Finally, a consistencyaware fine-tuning scheme is proposed to further improve the obtained geometry with fine-grained details.</p>
+<h3 id="Geometry-Reasoning"><a href="#Geometry-Reasoning" class="headerlink" title="Geometry Reasoning"></a>Geometry Reasoning</h3><p>SparseNeuS constructs cascaded geometry encoding volumes of two different resolutions for geometry reasoning, which aggregates image features to encode the information of local geometry. Specially, the coarse geometry is first extracted from a geometry encoding volume of low resolution, and then it is used to guide the geometry reasoning of the fine level.</p>
+<h4 id="Geometry-Encoding-Volume"><a href="#Geometry-Encoding-Volume" class="headerlink" title="Geometry Encoding Volume"></a>Geometry Encoding Volume</h4><p>For the scene captured by $N$ input images $\{ I_{i} \}_{i&#x3D;0}^{N-1}$, a bounding box which can cover the region of interests is first estimated. The bounding box is defined in the camera coordinate system of the centered input image, and then grided into regular voxels. To construct a geometry encoding volume $M$, 2D feature maps $\{F_{i}\}_{i&#x3D;0}^{N-1}$ are extracted from the input images $\{I_{i}\}_{i&#x3D;0}^{N-1}$ by a 2D feature extraction network. Next, with the camera parameters of one image $I$, each vertex $v$ of the bounding box is projected to each feature map $F_{i}$ and gots its features $F_{i}(\pi _{i}(v))$ by interpolation, where $\pi_{i}(v)$ denotes the projected pixel location of $F_{i}$ For simplicity, $F_{i}(\pi_{i}(v))$ is abbreviated as $F_{i}(v)$. Initialized by a cost volume $B$ and aggregated by a sparse 3D CNN $\psi$, the geometry encoding volume $M$ is constructed using all the projected features $\{F_{i}\}_{i&#x3D;0}^{N-1}$ of each vertex: </p>
+<p>$$<br>M &#x3D; \psi(B), \quad B&#x3D;\text{Var}(\{F_{i}\}_{i&#x3D;0}^{N-1})<br>$$</p>
+<h4 id="Surface-Extraction"><a href="#Surface-Extraction" class="headerlink" title="Surface Extraction"></a>Surface Extraction</h4><p>Given an arbitrary 3D location $q$, an MLP network $f_{\theta}$ takes the combination of the 3D coordinate and its corresponding interpolated features of geometry encoding volume $M(q)$ as input, to predict the Signed Distance Function (SDF) $s(q)$ for surface representation. Specially, positional encoding PE is applied on its 3D coordinates, and the surface extraction operation is expressed as: $s(q) &#x3D; f_{\theta}(\text{PE}(q), M(q))$.</p>
+<h4 id="Cascaded-Volumes-Scheme"><a href="#Cascaded-Volumes-Scheme" class="headerlink" title="Cascaded Volumes Scheme"></a>Cascaded Volumes Scheme</h4><p>For balancing the computational efficiency and reconstruction accuracy, SparseNeuS constructs cascaded geometry encoding volumes of two resolutions to perform geometry reasoning in a coarse-to-fine manner. A coarse geometry encoding volume is first constructed to infer the fundamental geometry, which presents the global structure of the scene but is relatively less accurate due to limited volume resolution. Guided by the obtained coarse geometry, a fine level geometry encoding volume is constructed to further refine the surface details. Numerous vertices far from the coarse surfaces can be discarded in the fine-level volume, which significantly reduces the computational memory burden and improves efficiency.</p>
+<h3 id="Appearance-Prediction"><a href="#Appearance-Prediction" class="headerlink" title="Appearance Prediction"></a>Appearance Prediction</h3><p>Given an arbitrary 3D location $q$ on a ray with direction $d$, it is difficult for a network to directly regress color values for rendering novel views with those limited information. Thus, SparseNeuS predicts blending weights of the input images to generate new colors. A location $q$ is first projected to the input images to obtain the corresponding colors $\{I_i(q)\}^{N−1}_{i&#x3D;0}$. Then the colors from different views are blended together as the predicted color of $q$ using the estimated blending weights.</p>
+<h4 id="Blending-Weights"><a href="#Blending-Weights" class="headerlink" title="Blending Weights"></a>Blending Weights</h4><p>SparseNeuS first projects $q$ onto the feature maps $\{F_{i}\}_{i&#x3D;0}^{N-1}$ to extract the corresponding features $\{F_{i}(q)\}_{i&#x3D;0}^{N-1}$ using bilinear interpolation. Then the mean and variance of the features $\{F_{i}(q)\}_{i&#x3D;0}^{N-1}$ from different views to capture the global photographic consistency information. Each feature $F_i(q)$ is concatenated with the mean and variance together, and then fed into a tiny MLP network to generate a new feature $F’(q)$. Next, the new feature $F’(q)$, the viewing direction of the query ray relative to the viewing direction of the $i$-th input image $\Delta d_i&#x3D;d−d_i$ , and the trilinearly interpolated volume encoding feature $M(q)$ into an MLP network $f_c$ to generate blending weight: $w^q_i &#x3D; f_c(F’_i(q), M(q), \Delta d_i)$. Finally, blending weights $\{w^q_i\}^{N−1}_{i&#x3D;0}$ are normalized using a Softmax operator.</p>
+<h4 id="Color-Blending"><a href="#Color-Blending" class="headerlink" title="Color Blending"></a>Color Blending</h4><p><strong>Pixel-based.</strong> With the obtained blending weights, the color $c_q$ of a 3D location $q$ is predicted as the weighted sum of its projected colors $\{I_i(q)\}^{N−1}_{i&#x3D;0}$ on the input images. The color and SDF values of 3D points sampled on the ray are predicted to render the color of the query ray. The color and SDF values of the sampled points are aggregated to obtain the final colors of the ray using SDF based volume rendering. Although supervision on the colors rendered by pixel-based blending already induces effective geometry reasoning, the information of a pixel is local and lacks contextual information, thus usually leading to inconsistent surface patches when input is sparse.</p>
+<p><strong>Patch-based.</strong> To enforce the synthesized colors and ground truth colors to be contextually consistent not only in pixel level but also in patch level and reduce the amount of computation, SparseNeuS leverages local surface plane assumption and homography transformation to achieve a more efficient implementation.</p>
+<p>The key idea is to estimate a local plane of a sampled point to efficiently derive the local patch. Given a sampled point $q$, the normal direction $n_q$ can be estimated by compute the spatial gradient, i.e., $n_q &#x3D; \Delta s(q)$. Then, SparseNeuS samples a set of points on the local plane $(q, n_q)$, projects the sampled points to each view, and obtains the colors by interpolation on each input image. All the points on the local plane share the same blending weights with $q$, and thus only one query of the blending weights is needed. The local plane assumption,which considers the neighboring geometric information of a query 3D position, encodes contextual information of local patches and enforces better geometric consistency. By adopting patch-based volume rendering, synthesized regions contain more global information than single pixels, thus producing more informative and consistent shape context, especially in the regions with weak texture and changing intensity.</p>
+<h4 id="Volume-Rendering"><a href="#Volume-Rendering" class="headerlink" title="Volume Rendering"></a>Volume Rendering</h4><p>Volume rendering is operated similarly to NeRF:</p>
+<p>$$<br>U(r) &#x3D; \sum_{i&#x3D;1}^{M}T_{i}(1-\exp(\sigma_{i}))u_i, \quad \text{where}\quad T_i&#x3D;\exp(-\sum_{j&#x3D;1}^{i-1}\sigma_i)<br>$$</p>
+<p>Where $r$ represents a certain ray, $U(r)$ denotes Pixel-based color $C(r)$ or Patch-based color $P(r)$, $u_i$ is similar to $U(r)$ except $i$ representing a certain point sampled on the ray and densities $\sigma_i$ is converted from sdf values $s_i$ by Neus.</p>
+<h3 id="Per-scene-Fine-tuning"><a href="#Per-scene-Fine-tuning" class="headerlink" title="Per-scene Fine-tuning"></a>Per-scene Fine-tuning</h3><p>To avoid inaccurate outliers and lack of subtle details caused by the limited information in the sparse input views and the high diversity and complexity of different scenes, a novel fine-tuning scheme, which is conditioned on the inferred geometry, is used to reconstruct subtle details and generate finer-grained surfaces. </p>
+<h4 id="Fine-tuning-Networks"><a href="#Fine-tuning-Networks" class="headerlink" title="Fine-tuning Networks"></a>Fine-tuning Networks</h4><p>In the fine-tuning, SparseNeuS directly optimizes the obtained fine-level geometry encoding volume and the signed distance function (SDF) network $f_{\theta}$, while the 2D feature extraction network and 3D sparse CNN networks are discarded. Moreover, the CNN based blending network used in the generic setting is replaced by a tiny MLP network. Although the CNN based network can be also used in per-scene fine-tuning,  a new tiny MLP can speed up the fine-tuning without loss of performance since the MLP is much smaller than the CNN based network. The MLP network still outputs blending weights $\{w^q_i\}^{N−1}_{i&#x3D;0}$ of a query 3D position $q$, but it takes the input as the combination of 3D coordinate $q$, the surface normal $n_q$, the ray direction $d$, the predicted SDF $s(q)$, and the interpolated feature of the geometry encoding volume $M(q)$. Specially, positional encoding PE is applied on the 3D position $q$ and the ray direction $d$. The MLP network $f’_c$ is defined as $\{w^q_i\}^{N−1}_{i&#x3D;0}&#x3D; f’_c(\text{PE}(q),\text{PE}(d), nq, s(q), M(q))$, where $\{w^q_i\}^{N−1}_{i&#x3D;0}$ are the predicted blending weights, and $N$ is the number of input images.</p>
+<h4 id="Consistency-aware-Color-Loss"><a href="#Consistency-aware-Color-Loss" class="headerlink" title="Consistency-aware Color Loss"></a>Consistency-aware Color Loss</h4><p>in multi-view stereo, 3D surface points often do not have consistent projections across different views, since the projections may be occluded or contaminated by image noises. As a result, the errors of these regions suffer from sub-optima, and the predicted surfaces of the regions are always inaccurate and distorted. To tackle this problem, a consistency-aware color loss is used to automatically detect the regions lacking consistent projections and exclude these regions in the optimization:</p>
+<div style="text-align: center;">
+    <span style="display: inline-block;">
+    \begin{aligned} 
+    \mathcal{L}_{color} = & \sum_{r\in\mathbb{R}}O\left(r\right)\cdot\mathcal{D}_{pix}\left(C\left(r\right),\tilde{C}\left(r\right)\right)+\sum_{r\in\mathbb{R}}O\left(r\right)\cdot\mathcal{D}_{pat}\left(P\left(r\right),\tilde{P}\left(r\right)\right)\\
+    & +\lambda_{0}\sum_{r\in\mathbb{R}}log\left(O\left(r\right)\right)+\lambda_{1}\sum_{r\in\mathbb{R}}log\left(1-O\left(r\right)\right)
+    \end{aligned}
+    </span>
+</div>
+
+<p>Where $\mathbb{R}$ is the set of all query rays, $O (r)$ is the sum of accumulated weights along the ray $r$ obtained by volume rendering, $C (r)$ and $\hat{C} (r)$ are the rendered and ground truth pixel-based colors of the query ray respectively, $P (r)$ and $\hat{P} (r)$ are the rendered and ground truth patch-based colors of the query ray respectively, and $D_{\text{pix}}(L1 Loss)$ and $D_{\text{pat}}$(NCC Loss) are the loss metrics of the rendered pixel color and rendered patch colors respectively.</p>
+<p>The rationale behind this formulation is, the points with inconsistent projections always have relatively large color errors that cannot be minimized in the optimization. Therefore, if the color errors are difficult to be minimized in optimization, the loss forces the sum of the accumulated weights $O (r)$ to be zero, such that the inconsistent regions will be excluded in the optimization. To control the level of consistency, SparseNeuS uses two logistic regularization terms: decreasing the ratio $\frac{\lambda_1}{\lambda_0}$ will lead to more regions being kept; otherwise, more regions are excluded and the surfaces are cleaner.</p>
+<h3 id="Training-Loss"><a href="#Training-Loss" class="headerlink" title="Training Loss"></a>Training Loss</h3><p>By enforcing the consistency of the synthesized colors and ground truth colors, the training of SparseNeuS does not rely on 3D ground-truth shapes. The overall loss function is defined as a weighted sum of the three loss terms:</p>
+<p>$$<br>\mathcal{L}&#x3D;\mathcal{L}_{\text{color }}+\alpha\mathcal{L}_{\text{eik}}+\beta\mathcal{L}_{\text{sparse}}<br>$$</p>
+<p>Actually, in the early stage of generic training, the estimated geometry is relatively inaccurate, and 3D surface points may have large errors, where the errors do not provide clear clues on whether the regions are radiance consistent or not. Thus, only duiring the stage of generic training, an Eikonal term is applied on the sampled points to regularize the SDF values derived from the surface prediction network $f_{\theta}$ :</p>
+<p>$$<br>\mathcal{L}_{eik}&#x3D;\frac{1}{\left|\mathbb{Q}\right|}\sum_{q\in\mathbb{Q}}\left({\left|\nabla f_{\theta}\left(q\right)\right|}_{2}-1\right)^{2}<br>$$</p>
+<p>and a sparseness regularization term to penalize the uncontrollable free surfaces caused by lack of supervising the invisible query samples behind the visible surfaces to enable compact geometry surfaces:</p>
+<p>$$<br>\mathcal{L}_{sparse}&#x3D;\frac{1}{\left|\mathbb{Q}\right|}\sum_{q\in\mathbb{Q}}\exp\left(-\tau\cdot\left|s(q)\right|\right)<br>$$</p>
+<p>Where $\tau$ is a hyperparamter to rescale the SDF value.</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2206.05737">Long, X., Lin, C., Wang, P., Komura, T., &amp; Wang, W. (2022, October). Sparseneus: Fast generalizable neural surface reconstruction from sparse views. In European Conference on Computer Vision (pp. 210-227). Cham: Springer Nature Switzerland.</a>
+<a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Papers/" class="category-chain-item">Papers</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Deep-Learning/">#Deep Learning</a>
+      
+        <a href="/tags/AIGC/">#AIGC</a>
+      
+        <a href="/tags/Computer-Vision/">#Computer Vision</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>SparseNeuS</div>
+      <div>https://iks-ran.github.io/2023/09/30/SparseNeus/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>iks-ran</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>September 30, 2023</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/09/30/One-2-3-45/" title="One-2-3-45:One Image to 3D Mesh in 45s">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">One-2-3-45:One Image to 3D Mesh in 45s</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/09/30/vsc_ddpdebug/" title="VSCode上用debugpy搭配time调试DDP程序">
+                        <span class="hidden-mobile">VSCode上用debugpy搭配time调试DDP程序</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
+    
+      <script type="text/javascript">
+        var disqus_config = function() {
+          this.page.url = 'https://iks-ran.github.io/2023/09/30/SparseNeus/';
+          this.page.identifier = '/2023/09/30/SparseNeus/';
+        };
+        Fluid.utils.loadComments('#disqus_thread', function() {
+          var d = document, s = d.createElement('script');
+          s.src = '//' + 'fluid' + '.disqus.com/embed.js';
+          s.setAttribute('data-timestamp', new Date());
+          (d.head || d.body).appendChild(s);
+        });
+      </script>
+    
+    <noscript>Please enable JavaScript to view the comments</noscript>
+  </div>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,792 @@
+
+
+<!DOCTYPE html>
+<html lang="en" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/pageicon.png">
+  <link rel="icon" href="/img/pageicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="iks-ran">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="3D Shape RepresentationsExplicit RepresentationThe description of a scene is explicit, and the 3D representation of the scene can be seen directly, such as mesh, point cloud, voxel and volume which ca">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Neural Radiance Fields">
+<meta property="og:url" content="https://iks-ran.github.io/2023/08/11/NeRF/index.html">
+<meta property="og:site_name" content="iks-ran">
+<meta property="og:description" content="3D Shape RepresentationsExplicit RepresentationThe description of a scene is explicit, and the 3D representation of the scene can be seen directly, such as mesh, point cloud, voxel and volume which ca">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://iks-ran.github.io/img/blogs/230811-nerf/1.png">
+<meta property="article:published_time" content="2023-08-11T15:04:20.843Z">
+<meta property="article:modified_time" content="2023-08-24T14:24:29.641Z">
+<meta property="article:author" content="iks-ran">
+<meta property="article:tag" content="Deep Learning">
+<meta property="article:tag" content="Computer Vision">
+<meta property="article:tag" content="Neural Radiance Fields">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://iks-ran.github.io/img/blogs/230811-nerf/1.png">
+  
+  
+  
+  <title>Neural Radiance Fields - iks-ran</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"iks-ran.github.io","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>iks-ran</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>Home</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>Archives</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>Categories</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>Tags</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>About</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/blogs/230811-nerf/1.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Neural Radiance Fields"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-08-11 23:04" pubdate>
+          August 11, 2023 pm
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          7.1k words
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          59 mins
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Neural Radiance Fields</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="3D-Shape-Representations"><a href="#3D-Shape-Representations" class="headerlink" title="3D Shape Representations"></a>3D Shape Representations</h2><h3 id="Explicit-Representation"><a href="#Explicit-Representation" class="headerlink" title="Explicit Representation"></a>Explicit Representation</h3><p>The description of a scene is explicit, and the 3D representation of the scene can be seen directly, such as mesh, point cloud, voxel and volume which can directly visualize the corresponding scene.</p>
+<p>Explicit representation will cause artifacts such as overlap because as it is usually discrete.</p>
+<h3 id="Implicit-Representation"><a href="#Implicit-Representation" class="headerlink" title="Implicit Representation"></a>Implicit Representation</h3><p>Usually a function is used to describe the scene geometry. Implicit means to use an MLP to simulate the function, such as inputting 3D space coordinates and outputting corresponding geometric information.</p>
+<p>It is a continuous representation that is suitable for large resolution scenes and usually does not require 3D signals for supervision</p>
+<h2 id="Novel-View-Synthesis-NVS"><a href="#Novel-View-Synthesis-NVS" class="headerlink" title="Novel View Synthesis (NVS)"></a>Novel View Synthesis (NVS)</h2><p>Novel View Synthesis (NVS) refers to the problem of capturing a scene from a novel angle Given a dense sampling of views.</p>
+<h2 id="NeRF"><a href="#NeRF" class="headerlink" title="NeRF"></a>NeRF</h2><figure>
+    <img src="/img/blogs/230811-nerf/1.png" srcset="/img/loading.gif" lazyload>
+    <figcaption>Fig.1 NeRF</figcaption>
+</figure>
+
+<p>NeRF proposed a 5D neural radiance field (MLP) realize the implicit representation of complex scenes. The neural radiance field encodes the entire 3D scene into the parameters of the neural network. </p>
+<p>To be able to render a scene from any new viewpoint, a neural network needs to learn at least the RGB color $(r, g, b)$ and volume density $\sigma$ of each point in space.</p>
+<p>$$<br>(r, g, b, \sigma) &#x3D; \text{MLP}(x, y, z, \theta, \phi)<br>$$</p>
+<p>To optimize the MLP, based on the classic Volume rendering, a differentiable rendering process is proposed (using layered sampling to improve rendering efficiency). A positional encoding is proposed to map 5D coordinates to a high-dimensional space, which is convenient for MLP learning.</p>
+<h3 id="Volume-Rendering"><a href="#Volume-Rendering" class="headerlink" title="Volume Rendering"></a>Volume Rendering</h3><p>Suppose the camera is located at $\mathbf{O}$, and the light direction is $\mathbf{d}$, then the equation of the light is $\mathbf{r}(t)&#x3D;\mathbf{O}+t\mathbf{d}$, where t represents the distance between $\mathbf{O}$ and a certain point on the ray,  its predicted pixel color $C(\mathbf{r})$ is</p>
+<div style="text-align: center;">
+    <span style="display: inline-block;">
+        \begin{equation}
+        C(\mathbf{r}) = \int_{t_n}^{t_f}T(t)\sigma(\mathbf{r}(t))\mathbf{c}(\mathbf{r}(t),\mathbf{d})dt,\textrm{ where }T(t)=\exp{\left(-\int_{t_n}^{t}\sigma(\mathbf{r}(s))ds\right)}
+        \end{equation}
+    </span>
+</div>
+
+<p>$T(t)$ represents the proportion of light transmitted to the $t$ point, $\sigma(t)\mathrm{d}t$ Indicates the proportion of the light that will be blocked in a small neighborhood near the $t$ point. The multiplication of the two is the proportion of light that reaches $t$ and is blocked at point $t$, and then multiplied by the color $\textbf{c}(\textbf{r}(t), \textbf{d})$ is the contribution of this point to the final color of the light. The integration interval $[t_n, t_f]$ represents the closest intersection point $t_{near}$ and the farthest intersection point $t_{far}$ of the ray with the medium.</p>
+<p>In actual calculation, we need to use discrete sums to approximate the integral value. That is, some discrete points are collected on the light, and their colors are weighted and summed.A stratified sampling approach is used where we partition $[t_n, t_f]$ into $N$ evenly-spaced bins and then draw one sample uniformly at random from within each bin:</p>
+<p>$$<br>t_{i}\sim\mathcal{U}\left[ t_{n}+\frac{i-1}{N}(t_{f}-t_{n}), t_{n}+\frac{i}{N}(t_{f}-t_{n}) \right]<br>$$</p>
+<p>Then we can use these samples to estimate $C(\mathbf{r})$ with the quadrature rule discussed in the volume rendering:</p>
+<div style="text-align: center;">
+    <span style="display: inline-block;">
+        \begin{equation}
+        \hat{C}(\mathbf{r}) = \sum _{i=1}^{N}T_{i}(1-\exp{(-\sigma _{i}\delta _{i}}))\mathbf{c}_{i}\, \textrm{ where }T_{i}=\exp{\left(-\sum _{j=1}^{i-1}\sigma _{j}\delta _{j}\right)}
+        \end{equation}
+    </span>
+</div>
+
+<p>where $\delta_i &#x3D; t_{i+1} − t_i$ is the distance between adjacent samples. This function for calculating $\hat{C}(\mathbf{r})$ from the set of $(c_i , \sigma_i)$ values is trivially differentiable and reduces to traditional alpha compositing with alpha values $\alpha_i &#x3D;(1-\exp{(-\sigma _{i}\delta _{i}}))$.</p>
+<h3 id="Optimizing-a-Neural-Radiance-Field"><a href="#Optimizing-a-Neural-Radiance-Field" class="headerlink" title="Optimizing a Neural Radiance Field"></a>Optimizing a Neural Radiance Field</h3><h4 id="Positional-Encoding"><a href="#Positional-Encoding" class="headerlink" title="Positional Encoding"></a>Positional Encoding</h4><p>As deep networks are biased towards learning lower frequency functions and mapping the inputs to a higher dimensional space using high frequency functions before passing them to the network enables better fitting of data that contains high frequency variation, the network $F_{\Theta}$ is a composition of two functions ${F_{\mathrm{\Theta}}&#x3D;F^{\prime}_{\mathrm{\Theta}}\circ\gamma}$, Here $\gamma$ is a mapping from $\mathbb{R}$ into a higher dimensional space $\mathbb{R}^{2L}$ the same as used in <a href="https://iks-ran.github.io/2023/07/19/transformer/">transformer</a>, and $F^{\prime}_{\mathrm{\Theta}}$ is still simply a regular MLP.</p>
+<p>This function is applied separately to each of the three coordinate values in $\mathbf{x}$ (which are normalized to lie in $[−1, 1]$) and to the three components of the Cartesian viewing direction unit vector $\mathbf{d}$ (which by construction lie in $[−1, 1]$). In NeRF, $L &#x3D; 10$ for $\mathbf{x}$ and $L &#x3D; 4$ for $\mathbf{d}$.</p>
+<h4 id="Hierarchical-Volume-Sampling"><a href="#Hierarchical-Volume-Sampling" class="headerlink" title="Hierarchical Volume Sampling"></a>Hierarchical Volume Sampling</h4><p>The rendering strategy of densely evaluating the neural radiance field network at $N$ query points along each camera ray is inefficient as free space and occluded regions that do not contribute to the rendered image are still sampled repeatedly. Thus, a hierarchical representation that increases rendering efficiency by allocating samples proportionally to their expected effect on the final rendering is used. </p>
+<p>Instead of just using a single network to represent the scene, NeRF simultaneously optimize two networks: one “coarse” and one “fine”. First sample a set of $N_c$ locations using stratified sampling, and evaluate the “coarse” network at these locations as described before. Given the output of this “coarse” network, a more informed sampling of points are produced along each ray where samples are biased towards the relevant parts of the volume. To do this, the alpha composited color from the coarse network $\hat{C}(\mathbf{r})$ is rewrited as a weighted sum of all sampled colors $c_i$ along the ray:</p>
+<p>$$<br>\hat{C}_{c}(\mathbf{r})&#x3D;\sum_{i&#x3D;1}^{N_{c}}w_{i}c_{i},\quad w_{i}&#x3D;T_{i}(1-\exp{(-\sigma_{i}\delta_{i}))}<br>$$</p>
+<p>Normalizing these weights as $\hat{w}_{i}&#x3D;\frac{w_{i}}{\sum_{j&#x3D;1}^{N_c}w_{j}}$ produces a piecewise-constant PDF along the ray and then sample a second set of $N_f$locations from this distribution using inverse transform sampling, evaluate the “fine” network using all $N_c+N_f$ samples. This procedure allocates more samples to regions expected to contain visible content, addressing a similar goal as importance sampling. In NeRF, $N_c &#x3D; 64$ and $N_f &#x3D; 128$.</p>
+<h4 id="Model-Architecture"><a href="#Model-Architecture" class="headerlink" title="Model Architecture"></a>Model Architecture</h4><figure>
+    <img src="/img/blogs/230811-nerf/2.png" srcset="/img/loading.gif" lazyload>
+    <figcaption>Fig.2 MLP in NeRF</figcaption>
+</figure>
+
+<p>See Fig.2 . Input vectors are shown in green, intermediate hidden layers are shown in blue, output vectors are shown in red, and the number inside each block signifies the vector’s dimension. All layers are standard fully-connected layers, black arrows indicate layers with ReLU activations, orange arrows indicate layers with no activation, dashed black arrows indicate layers with sigmoid activation, and “+” denotes vector concatenation. The positional encoding of the input location $(\gamma(\mathbf{x}))$ is passed through 8 fully-connected ReLU layers, each with 256 channels. An additional layer outputs the volume density $\sigma$ (which is rectified using a ReLU to ensure that the output volume density is nonnegative) and a 256-dimensional feature vector. This feature vector is concatenated with the positional encoding of the input viewing direction $(\gamma(\mathbf{d}))$, and is processed by an additional fully-connected ReLU layer with 128 channels. A final layer (with a sigmoid activation) outputs the emitted RGB radiance at position $\mathbf{x}$, as viewed by a ray with direction $\mathbf{d}$.</p>
+<p>The loss is simply the total squared error between the rendered and true pixel colors for both the coarse and fine renderings:</p>
+<div style="text-align: center;">
+    <span style="display: inline-block;">
+        \begin{equation}
+        \mathcal{L} = \sum_{\mathbf{r}\in \mathcal{R}}\left[ \left \lVert \hat{C}_{c}(\mathbf{r})-C(\mathbf{r})\right \rVert_{2}^{2}+\left \lVert \hat{C}_{f}(\mathbf{r})-C(\mathbf{r})\right \rVert_{2}^{2}\right]
+        \end{equation}
+    </span>
+</div>
+
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2003.08934">Mildenhall, B., Srinivasan, P.P., Tancik, M., Barron, J.T., Ramamoorthi, R., &amp; Ng, R. (2020). NeRF. Communications of the ACM, 65, 99 - 106.</a>
+<a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://yconquesty.github.io/blog/ml/nerf/">A Surge in NeRF</a>
+<a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:3" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/524523357">神经辐射场(NeRF)-代码无痛解读</a>
+<a href="#fnref:3" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:4" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/526879513">NeRF（神经辐射场）有相关的物理（光学）原理支撑吗？</a>
+<a href="#fnref:4" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Papers/" class="category-chain-item">Papers</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Deep-Learning/">#Deep Learning</a>
+      
+        <a href="/tags/Computer-Vision/">#Computer Vision</a>
+      
+        <a href="/tags/Neural-Radiance-Fields/">#Neural Radiance Fields</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Neural Radiance Fields</div>
+      <div>https://iks-ran.github.io/2023/08/11/NeRF/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>Author</div>
+          <div>iks-ran</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>Posted on</div>
+          <div>August 11, 2023</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>Licensed under</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - Attribution">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/08/14/dreamfusion/" title="DreamFusion">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">DreamFusion</span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/08/10/networksetup/" title="networksetup:macOS上的终端网络配置管理工具">
+                        <span class="hidden-mobile">networksetup:macOS上的终端网络配置管理工具</span>
+                        <span class="visible-mobile">Next</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div class="disqus" style="width:100%">
+    <div id="disqus_thread"></div>
+    
+      <script type="text/javascript">
+        var disqus_config = function() {
+          this.page.url = 'https://iks-ran.github.io/2023/08/11/NeRF/';
+          this.page.identifier = '/2023/08/11/NeRF/';
+        };
+        Fluid.utils.loadComments('#disqus_thread', function() {
+          var d = document, s = d.createElement('script');
+          s.src = '//' + 'fluid' + '.disqus.com/embed.js';
+          s.setAttribute('data-timestamp', new Date());
+          (d.head || d.body).appendChild(s);
+        });
+      </script>
+    
+    <noscript>Please enable JavaScript to view the comments</noscript>
+  </div>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>Table of Contents</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Search</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">Keyword</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">Blog works best with JavaScript enabled</div>
+  </noscript>
+</body>
+</html>
