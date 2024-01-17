@@ -16,24 +16,21 @@
   <meta name="author" content="iks-ran">
   <meta name="keywords" content="">
   
-    <meta name="description" content="NormalizationFor a tensor with the shape of (N, C, D), where $N$ stands for batch-size, $C$ stands for features and D stands for feature map (for example, $D$ is H, W in computer vision), Z-Score Norm">
+    <meta name="description" content="sdv5 1girl,ninja,angry and blush,bondage,perfect breast,bdsm,gagged,lying,sexy,transparent and soaked bodysuit,underwear,bare shoulders,fair skin,spread open legs,bare and slender legs,long black sing">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Normalization——Batch Norm, Layer Norm, Instance Norm and Group Norm">
-<meta property="og:url" content="https://iks-ran.me/2023/07/11/Normalization/index.html">
+<meta property="og:title" content="iks-ran">
+<meta property="og:url" content="https://iks-ran.me/2024/01/08/next/index.html">
 <meta property="og:site_name" content="iks-ran">
-<meta property="og:description" content="NormalizationFor a tensor with the shape of (N, C, D), where $N$ stands for batch-size, $C$ stands for features and D stands for feature map (for example, $D$ is H, W in computer vision), Z-Score Norm">
+<meta property="og:description" content="sdv5 1girl,ninja,angry and blush,bondage,perfect breast,bdsm,gagged,lying,sexy,transparent and soaked bodysuit,underwear,bare shoulders,fair skin,spread open legs,bare and slender legs,long black sing">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://iks-ran.me/img/blogs/230711-normalizations/1.png">
-<meta property="article:published_time" content="2023-07-11T06:48:30.060Z">
-<meta property="article:modified_time" content="2023-07-14T06:42:47.390Z">
+<meta property="article:published_time" content="2024-01-08T12:25:48.342Z">
+<meta property="article:modified_time" content="2024-01-08T12:26:10.480Z">
 <meta property="article:author" content="iks-ran">
-<meta property="article:tag" content="Deep Learning">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://iks-ran.me/img/blogs/230711-normalizations/1.png">
   
   
   
-  <title>Normalization——Batch Norm, Layer Norm, Instance Norm and Group Norm - iks-ran</title>
+  <title>iks-ran</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -193,13 +190,13 @@
   
 
 <div id="banner" class="banner" parallax=true
-     style="background: url('/img/blogs/230711-normalizations/1.png') no-repeat center center; background-size: cover;">
+     style="background: url('/img/cky.png') no-repeat center center; background-size: cover;">
   <div class="full-bg-img">
     <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Normalization——Batch Norm, Layer Norm, Instance Norm and Group Norm"></span>
+            <span id="subtitle" data-typed-text=""></span>
           
         </div>
 
@@ -210,8 +207,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-07-11 14:48" pubdate>
-          July 11, 2023 pm
+        <time datetime="2024-01-08 20:25" pubdate>
+          January 8, 2024 pm
         </time>
       </span>
     
@@ -222,7 +219,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          6.5k words
+          266 words
         
       </span>
     
@@ -233,7 +230,7 @@
         
         
         
-          55 mins
+          3 mins
         
       </span>
     
@@ -271,63 +268,13 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Normalization——Batch Norm, Layer Norm, Instance Norm and Group Norm</h1>
+            <h1 style="display: none"></h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="Normalization"><a href="#Normalization" class="headerlink" title="Normalization"></a>Normalization</h2><p>For a tensor with the shape of <code>(N, C, D)</code>, where $N$ stands for batch-size, $C$ stands for features and D stands for feature map (for example, $D$ is <code>H, W</code> in computer vision), Z-Score Normalization of a certain dimension  $l$ is</p>
-<p>$$<br>\hat{z}^{l} &#x3D; \frac{z^l - E(z^l)}{\sqrt{var(z^l)+\epsilon}}<br>$$</p>
-<p>If some dimensions are ignored during normalization, the standardized data will retain the information between these dimensions; this may be a bit convoluted. Taking BN as an example, BN is standardized in each channel $C$, ignoring the pixel position, The sample number in the batch, so BN retains the association of data in these dimensions, but at the same time loses the data connection between channels.</p>
-<p>Batch Normalization, Layer Normalization, Instance Normalization and Group Normalization are the most commonly used normalization methods based on Z-Score Normalization. They all consider and make a fuss about the input of the activation function, and normalize the input of the activation function in different ways.</p>
-<figure>
-    <img src="/img/blogs/230711-normalizations/1.png" srcset="/img/loading.gif" lazyload alt="Fig.1 Normalization methods">
-    <figcaption>Fig.1 Normalization methods</figcaption>
-</figure>
+                <p>sdv5 1girl,ninja,angry and blush,bondage,perfect breast,bdsm,gagged,lying,sexy,transparent and soaked bodysuit,underwear,bare shoulders,fair skin,spread open legs,bare and slender legs,long black single ponytail,best quality,masterpiece,original,highres,blurred background,depth of field</p>
 
-<blockquote>
-<p>Normalization methods. Each subplot shows a feature map tensor, with N as the batch axis, C as the channel axis, and (H, W) as the spatial axes. The pixels in blue are normalized by the same mean and variance, computed by aggregating the values of these pixels</p>
-</blockquote>
-<h2 id="Batch-Normalization"><a href="#Batch-Normalization" class="headerlink" title="Batch Normalization"></a>Batch Normalization</h2><h3 id="Motivation"><a href="#Motivation" class="headerlink" title="Motivation"></a>Motivation</h3><ul>
-<li><p>In the process of deep neural network training, it is usually trained with each mini-batch input to the network, so that each batch has a different distribution, which makes the model training particularly difficult.</p>
-</li>
-<li><p>Internal Covariate Shift: In a deep neural network, the input of a middle layer is the output of the previous neural layer. Therefore, changes in the parameters of the neural layers before it lead to large differences in the distribution of its inputs. During the training process, the activation function will change the distribution of data in each layer. As the network deepens, this change (difference) will become larger and larger, making the model training particularly difficult, the convergence speed is very slow, and the gradient will disappear.</p>
-</li>
-</ul>
-<h3 id="Method"><a href="#Method" class="headerlink" title="Method"></a>Method</h3><p>BN takes channel $C$ as $l$. The standard normalization of the net input $z^l$will make its values ​​concentrate around 0. If the sigmoid function is used, this value range is just close to the linear transformation range, which weakens the nonlinear nature of the neural network. Therefore, in order to normalize Without negatively affecting the representational power of the network, we can change the range of values through an additional scaling and translation transformation.</p>
-<p>$$<br>\hat{z}^{l} &#x3D; \frac{z^l - E(z^l)}{\sqrt{var(z^l)+\epsilon}} \odot \gamma + \beta \Leftarrow BN_{\gamma,\beta}(z^l)\quad where\quad l\quad is\quad C<br>$$</p>
-<p>Where $\gamma$ and $\beta$ are learnable variables. BN is usually used after the fully connected layer or convolutional layer, before the activation function.</p>
-<p>During training, the BN layer will use the mean and standard deviation of the data in each batch to standardize the samples in the batch each time; at the same time, the global mean and variance on the training set will be continuously updated and saved by means of sliding average.</p>
-<p>While testing, normalize each data point on the test set with the mean and variance of the saved training set.</p>
-<h3 id="Discussion"><a href="#Discussion" class="headerlink" title="Discussion"></a>Discussion</h3><h4 id="Advantages"><a href="#Advantages" class="headerlink" title="Advantages"></a>Advantages</h4><ul>
-<li>Allows large learning rate</li>
-<li>Weaken the strong dependence on initialization and reduce the difficulty of weight initialization</li>
-<li>Avoid overfitting as each of mini-batch contain information from others and each mini-batch is sampled randomly</li>
-<li>Keep the mean and variance of the values in the hidden layer unchanged, control the distribution range of the data, and avoid gradient disappearance and gradient explosion</li>
-<li>Have the same regularization effect as dropout. In terms of regularization, dropout is generally used for fully connected layers, and BN is used for convolutional layers</li>
-<li>Alleviate internal covariate shift problem and increase training speed</li>
-</ul>
-<h4 id="Disadvantages"><a href="#Disadvantages" class="headerlink" title="Disadvantages"></a>Disadvantages</h4><ul>
-<li>The mean and variance are calculated on a batch each time. If the batch-size is too small, the calculated mean and variance are not enough to represent the entire data distribution.</li>
-<li>If the batch-size is too large, it will exceed the memory capacity; more epochs need to be run, resulting in a longer total training time; the direction of gradient descent will be fixed directly, making it difficult to update.</li>
-</ul>
-<h2 id="Layer-Normalization"><a href="#Layer-Normalization" class="headerlink" title="Layer Normalization"></a>Layer Normalization</h2><h3 id="Motivation-1"><a href="#Motivation-1" class="headerlink" title="Motivation"></a>Motivation</h3><p>For neural networks whose input distribution changes dynamically in the neural network, such as RNN, the BN operation cannot be applied, even if filled with specific characters, it will cause the problem of uneven distribution of some channels.</p>
-<h3 id="Method-1"><a href="#Method-1" class="headerlink" title="Method"></a>Method</h3><p>Compared with BN, LN takes batch $N$ instead of channel $C$ as $l$.Other parts in LN are the same with BN</p>
-<p>$$<br>\hat{z}^{l} &#x3D; \frac{z^l - E(z^l)}{\sqrt{var(z^l)+\epsilon}} \odot \gamma + \beta \Leftarrow LN_{\gamma,\beta}(z^l)\quad where\quad l\quad is\quad N<br>$$</p>
-<h3 id="Discussion-1"><a href="#Discussion-1" class="headerlink" title="Discussion"></a>Discussion</h3><p>LN does not require batch training, and can be normalized within a single piece of data. LN also does not depend on batch-size and the length of the input sequence, so it can be used in batch size 1 and RNN. The effect of LN on RNN is more obvious, but on CNN, the effect is not as good as BN.</p>
-<h2 id="Instance-Normalization"><a href="#Instance-Normalization" class="headerlink" title="Instance Normalization"></a>Instance Normalization</h2><h3 id="Motivation-2"><a href="#Motivation-2" class="headerlink" title="Motivation"></a>Motivation</h3><p>In image stylization, the generated result mainly depends on an image instance, and the mean and variance of each channel of the feature map will affect the style of the final generated image. Therefore, normalizing the entire batch is not suitable for image stylization, so normalizing H and W can speed up model convergence and maintain the independence between each image instance.</p>
-<h3 id="Method-2"><a href="#Method-2" class="headerlink" title="Method"></a>Method</h3><p>Compared with BN, IN takes each channel $C$ of each batch $N$ instead of channel $C$ as $l$.Other parts in IN are the same with BN</p>
-<p>$$<br>\hat{z}^{l} &#x3D; \frac{z^l - E(z^l)}{\sqrt{var(z^l)+\epsilon}} \odot \gamma + \beta \Leftarrow LN_{\gamma,\beta}(z^l)\quad where\quad l\quad is\quad N * C<br>$$</p>
-<h3 id="Discussion-2"><a href="#Discussion-2" class="headerlink" title="Discussion"></a>Discussion</h3><p>IN is a separate normalization operation for each channel in a sample, which is generally used for style migration, but if the feature map can use the correlation between channels, then IN is not suitable.</p>
-<h2 id="Group-Normalization"><a href="#Group-Normalization" class="headerlink" title="Group Normalization"></a>Group Normalization</h2><h3 id="Motivation-3"><a href="#Motivation-3" class="headerlink" title="Motivation"></a>Motivation</h3><p>The proposed formula of GN is to solve the problem that BN has poor effect on small mini batch-size, and is suitable for tasks that occupy relatively large video memory, such as image segmentation. For this type of task, the batch size may only be a single digit, and no matter how large the video memory is, it will not be enough. When the batch size is a single digit, BN performs poorly, because there is no way to approximate the mean and standard deviation of the population through the amount of data of several samples. GN is also independent of batch, it is a compromise between LN and IN.</p>
-<h3 id="Method-3"><a href="#Method-3" class="headerlink" title="Method"></a>Method</h3><p>GN divides channels of each sample into G groups. Compared with BN, GN takes each group $C &#x2F; G$ of each batch $N$ instead of channel $C$ as $l$.Other parts in GN are the same with BN</p>
-<p>$$<br>\hat{z}^{l} &#x3D; \frac{z^l - E(z^l)}{\sqrt{var(z^l)+\epsilon}} \odot \gamma + \beta \Leftarrow LN_{\gamma,\beta}(z^l)\quad where\quad l\quad is\quad N * \frac{C}{G}<br>$$</p>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/524829507">深度学习基础 之 —- BN、LN、IN、GN、SN</a>
-<a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1502.03167">Sergey Ioffe and Christian Szegedy. Batch normalization: Accelerating deep network training by reducing internal covariate shift. In ICML, 2015.</a>
-<a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:3" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1607.06450">Jimmy Lei Ba, Jamie Ryan Kiros, and Geoffrey E. Hinton. Layer normalization. arXiv:1607.06450, 2016.</a>
-<a href="#fnref:3" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:4" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1607.08022">Dmitry Ulyanov, Andrea Vedaldi, and Victor Lempitsky. Instance normalization: The missing ingredient for fast stylization. arXiv:1607.08022, 2016.</a>
-<a href="#fnref:4" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:5" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1803.08494">Yuxin Wu and Kaiming He. Group normalization. arXiv:1803.08494, 2018.</a>
-<a href="#fnref:5" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
                 
               </div>
             
@@ -335,34 +282,6 @@
             <div>
               <div class="post-metas my-3">
   
-    <div class="post-meta mr-3 d-flex align-items-center">
-      <i class="iconfont icon-category"></i>
-      
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/Papers/" class="category-chain-item">Papers</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-    </div>
-  
-  
-    <div class="post-meta">
-      <i class="iconfont icon-tags"></i>
-      
-        <a href="/tags/Deep-Learning/">#Deep Learning</a>
-      
-    </div>
   
 </div>
 
@@ -372,8 +291,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Normalization——Batch Norm, Layer Norm, Instance Norm and Group Norm</div>
-      <div>https://iks-ran.me/2023/07/11/Normalization/</div>
+      <div></div>
+      <div>https://iks-ran.me/2024/01/08/next/</div>
     </div>
     <div class="license-meta">
       
@@ -385,7 +304,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>July 11, 2023</div>
+          <div>January 8, 2024</div>
         </div>
       
       
@@ -417,9 +336,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/07/12/einops/" title="Einops:Clear and Reliable Tensor Manipulations with Einstein-like Notation">
+                      <a href="/2024/01/15/build_web_service/" title="Flask + Gunicorn + Nginx 搭建 Web 服务">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Einops:Clear and Reliable Tensor Manipulations with Einstein-like Notation</span>
+                        <span class="hidden-mobile">Flask + Gunicorn + Nginx 搭建 Web 服务</span>
                         <span class="visible-mobile">Previous</span>
                       </a>
                     
@@ -427,8 +346,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/07/06/PointNet++/" title="PointNet++:Aggregate Local Features with Sampling And Grouping">
-                        <span class="hidden-mobile">PointNet++:Aggregate Local Features with Sampling And Grouping</span>
+                      <a href="/2024/01/07/t2i_tips/" title="Text to Images 使用记录">
+                        <span class="hidden-mobile">Text to Images 使用记录</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -448,8 +367,8 @@
     
       <script type="text/javascript">
         var disqus_config = function() {
-          this.page.url = 'https://iks-ran.me/2023/07/11/Normalization/';
-          this.page.identifier = '/2023/07/11/Normalization/';
+          this.page.url = 'https://iks-ran.me/2024/01/08/next/';
+          this.page.identifier = '/2024/01/08/next/';
         };
         Fluid.utils.loadComments('#disqus_thread', function() {
           var d = document, s = d.createElement('script');

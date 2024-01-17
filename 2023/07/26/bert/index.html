@@ -19,18 +19,18 @@
     <meta name="description" content="BERTInput&#x2F;Output Representations          Fig.1 Input Represention   For handling a variety of down-stream tasks, the input representation of BERT is able to unambiguously represent both a single">
 <meta property="og:type" content="article">
 <meta property="og:title" content="BERT:Bidirectional Encoder Representations from Transformers">
-<meta property="og:url" content="https://iks-ran.github.io/2023/07/26/bert/index.html">
+<meta property="og:url" content="https://iks-ran.me/2023/07/26/bert/index.html">
 <meta property="og:site_name" content="iks-ran">
 <meta property="og:description" content="BERTInput&#x2F;Output Representations          Fig.1 Input Represention   For handling a variety of down-stream tasks, the input representation of BERT is able to unambiguously represent both a single">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://iks-ran.github.io/img/blogs/230726-bert/1.png">
+<meta property="og:image" content="https://iks-ran.me/img/blogs/230726-bert/1.png">
 <meta property="article:published_time" content="2023-07-26T15:08:01.365Z">
 <meta property="article:modified_time" content="2023-08-10T11:45:09.374Z">
 <meta property="article:author" content="iks-ran">
 <meta property="article:tag" content="Deep Learning">
 <meta property="article:tag" content="Natural Language Processing">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://iks-ran.github.io/img/blogs/230726-bert/1.png">
+<meta name="twitter:image" content="https://iks-ran.me/img/blogs/230726-bert/1.png">
   
   
   
@@ -72,7 +72,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"iks-ran.github.io","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+    var CONFIG = {"hostname":"iks-ran.me","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -311,7 +311,7 @@ Label	=   𝙽𝚘𝚝𝙽𝚎𝚡𝚝
 <p>The Pytorch implementation is</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">NextSentencePredict</span>(nn.Module):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, d_model</span>):<br>        <span class="hljs-built_in">super</span>(NextSentencePredict, self).__init__()<br>        self.fc = nn.Linear(d_model, <span class="hljs-number">2</span>)<br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, <span class="hljs-built_in">input</span></span>):<br>        <span class="hljs-keyword">return</span> F.softmax(self.fc(<span class="hljs-built_in">input</span>), dim=-<span class="hljs-number">1</span>)<br></code></pre></td></tr></table></figure>
 
-<h3 id="BERT-Pytorch-Implementation"><a href="#BERT-Pytorch-Implementation" class="headerlink" title="BERT Pytorch Implementation"></a>BERT Pytorch Implementation</h3><p>Code of other modules are from <a href="https://iks-ran.github.io/2023/07/19/transformer/">this blog</a> <em>NOTE: The activation function of Point-wise Feed-Forward Networks in BERT is GELU instead of ReLU</em> .</p>
+<h3 id="BERT-Pytorch-Implementation"><a href="#BERT-Pytorch-Implementation" class="headerlink" title="BERT Pytorch Implementation"></a>BERT Pytorch Implementation</h3><p>Code of other modules are from <a target="_blank" rel="noopener" href="https://iks-ran.github.io/2023/07/19/transformer/">this blog</a> <em>NOTE: The activation function of Point-wise Feed-Forward Networks in BERT is GELU instead of ReLU</em> .</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">BERT</span>(nn.Module):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, num_blocks, vocab_size, max_len, d_model, n_heads, d_ff, dropout</span>):<br>        <span class="hljs-built_in">super</span>(BERT, self).__init__()<br>        self.ebd = BERTEmbeddingLayer(vocab_size, max_len, d_model)<br>        self.blks = nn.ModuleList([EncoderBlock(d_model, n_heads, d_ff, dropout) <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(num_blocks)])<br>        self.mlm = MaskedLanguageModel(vocab_size, d_model)<br>        self.nsp = NextSentencePredict(d_model)<br><br><br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">forward</span>(<span class="hljs-params">self, <span class="hljs-built_in">input</span>, segment, mask=<span class="hljs-literal">None</span></span>):<br><br>        <span class="hljs-keyword">if</span> mask <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span>:<br>            mask = <span class="hljs-built_in">input</span> &gt; <span class="hljs-number">0</span><br><br>        output = self.ebd(<span class="hljs-built_in">input</span>, segment)<br>        <span class="hljs-keyword">for</span> blk <span class="hljs-keyword">in</span> self.blks:<br>            output = blk(output, mask)<br><br>        mlm = self.mlm(output)<br>        nsp = self.nsp(output[:, <span class="hljs-number">0</span>])<br><br>        <span class="hljs-keyword">return</span> mlm, nsp<br></code></pre></td></tr></table></figure>
 <h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1810.04805">Devlin, J., Chang, M., Lee, K., &amp; Toutanova, K. (2019). BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding. ArXiv, abs&#x2F;1810.04805.</a>
 <a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
@@ -362,7 +362,7 @@ Label	=   𝙽𝚘𝚝𝙽𝚎𝚡𝚝
   <div class="license-box my-3">
     <div class="license-title">
       <div>BERT:Bidirectional Encoder Representations from Transformers</div>
-      <div>https://iks-ran.github.io/2023/07/26/bert/</div>
+      <div>https://iks-ran.me/2023/07/26/bert/</div>
     </div>
     <div class="license-meta">
       
@@ -437,7 +437,7 @@ Label	=   𝙽𝚘𝚝𝙽𝚎𝚡𝚝
     
       <script type="text/javascript">
         var disqus_config = function() {
-          this.page.url = 'https://iks-ran.github.io/2023/07/26/bert/';
+          this.page.url = 'https://iks-ran.me/2023/07/26/bert/';
           this.page.identifier = '/2023/07/26/bert/';
         };
         Fluid.utils.loadComments('#disqus_thread', function() {

@@ -16,20 +16,20 @@
   <meta name="author" content="iks-ran">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Text to Image 使用记录常用模型 animagine-xl-2.0 anything-v5 OrangeMixs …  常用 prompt提升成图质量 highres best_quality masterpiece …  添加后期效果 chromatic_aberration lens_flare overexposure streaked_hair cold&#x2F;warm_t">
+    <meta name="description" content="Text to Image 使用记录常用模型 animagine-xl-3.0 anything-v5 OrangeMixs …  常用 prompt提升成图质量 highres best quality masterpiece …  添加后期效果 chromatic cberration - 色差畸变 lens flare - 镜头光晕 light rays - 光线 Bbacklighting">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Text to Images 使用记录">
-<meta property="og:url" content="https://iks-ran.github.io/2024/01/07/t2i_tips/index.html">
+<meta property="og:url" content="https://iks-ran.me/2024/01/07/t2i_tips/index.html">
 <meta property="og:site_name" content="iks-ran">
-<meta property="og:description" content="Text to Image 使用记录常用模型 animagine-xl-2.0 anything-v5 OrangeMixs …  常用 prompt提升成图质量 highres best_quality masterpiece …  添加后期效果 chromatic_aberration lens_flare overexposure streaked_hair cold&#x2F;warm_t">
+<meta property="og:description" content="Text to Image 使用记录常用模型 animagine-xl-3.0 anything-v5 OrangeMixs …  常用 prompt提升成图质量 highres best quality masterpiece …  添加后期效果 chromatic cberration - 色差畸变 lens flare - 镜头光晕 light rays - 光线 Bbacklighting">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://iks-ran.github.io/img/cky.jpg">
+<meta property="og:image" content="https://iks-ran.me/img/cky.jpg">
 <meta property="article:published_time" content="2024-01-07T15:00:15.419Z">
-<meta property="article:modified_time" content="2024-01-07T15:00:17.432Z">
+<meta property="article:modified_time" content="2024-01-17T13:43:17.991Z">
 <meta property="article:author" content="iks-ran">
 <meta property="article:tag" content="AIGC">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://iks-ran.github.io/img/cky.jpg">
+<meta name="twitter:image" content="https://iks-ran.me/img/cky.jpg">
   
   
   
@@ -71,7 +71,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"iks-ran.github.io","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+    var CONFIG = {"hostname":"iks-ran.me","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -222,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          704 words
+          813 words
         
       </span>
     
@@ -233,7 +233,7 @@
         
         
         
-          6 mins
+          7 mins
         
       </span>
     
@@ -277,32 +277,36 @@
               <div class="markdown-body">
                 
                 <h2 id="Text-to-Image-使用记录"><a href="#Text-to-Image-使用记录" class="headerlink" title="Text to Image 使用记录"></a>Text to Image 使用记录</h2><h3 id="常用模型"><a href="#常用模型" class="headerlink" title="常用模型"></a>常用模型</h3><ul>
-<li>animagine-xl-2.0</li>
+<li>animagine-xl-3.0</li>
 <li>anything-v5</li>
 <li>OrangeMixs</li>
 <li>…</li>
 </ul>
 <h3 id="常用-prompt"><a href="#常用-prompt" class="headerlink" title="常用 prompt"></a>常用 prompt</h3><h4 id="提升成图质量"><a href="#提升成图质量" class="headerlink" title="提升成图质量"></a>提升成图质量</h4><ul>
 <li>highres</li>
-<li>best_quality</li>
+<li>best quality</li>
 <li>masterpiece</li>
 <li>…</li>
 </ul>
 <h4 id="添加后期效果"><a href="#添加后期效果" class="headerlink" title="添加后期效果"></a>添加后期效果</h4><ul>
-<li>chromatic_aberration</li>
-<li>lens_flare</li>
-<li>overexposure</li>
-<li>streaked_hair</li>
-<li>cold&#x2F;warm_tones</li>
-<li>blurred_background </li>
-<li>bokeh_effect</li>
-<li>depth_of_field</li>
-<li>diffusion</li>
+<li>chromatic cberration - 色差畸变</li>
+<li>lens flare - 镜头光晕</li>
+<li>light rays - 光线</li>
+<li>Bbacklighting - 背光</li>
+<li>diffraction spikes - 衍射尖峰</li>
+<li>overexposure - 过曝</li>
+<li>streaked hair - 条纹效应（通常指头发上的条纹）</li>
+<li>shadow - 阴影</li>
+<li>film grain - 胶片颗粒</li>
+<li>blurry background - 模糊背景</li>
+<li>bokeh - 散景</li>
+<li>depth of field - 景深</li>
+<li>cold&#x2F;warm tones - 冷&#x2F;暖色调</li>
 <li>…</li>
 </ul>
 <h4 id="prompt-举例"><a href="#prompt-举例" class="headerlink" title="prompt 举例"></a>prompt 举例</h4><p>一个典型的prompt可以参考</p>
 <blockquote>
-<p>1girl sea sunflower_field island school_uniform serafuku summer sunshine morning original highres chromatic_aberration lens_flare two-tone_eyes best_quality masterpiece overexposure waist-length_black_twintails streaked_hair warm_tones blurred_background landscape diffusion bokeh_effect depth_of_field</p>
+<p>1girl, sea,sunflower field, island, school uniform, serafuku, summer, sunshine, morning, original, highres, chromatic aberration, lens flare, two-tone eyes, best quality, masterpiece, overexposure, waist-length black twintails, streaked hair, warm tones, blurred background, landscape, diffusion, bokeh effect, depth of field</p>
 </blockquote>
 <figure>
     <img src="/img/blogs/240107-t2i_tips/1.png" srcset="/img/loading.gif" lazyload>
@@ -358,7 +362,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>Text to Images 使用记录</div>
-      <div>https://iks-ran.github.io/2024/01/07/t2i_tips/</div>
+      <div>https://iks-ran.me/2024/01/07/t2i_tips/</div>
     </div>
     <div class="license-meta">
       
@@ -402,6 +406,12 @@
                   <article class="post-prev col-6">
                     
                     
+                      <a href="/2024/01/08/next/" title="">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile"></span>
+                        <span class="visible-mobile">Previous</span>
+                      </a>
+                    
                   </article>
                   <article class="post-next col-6">
                     
@@ -427,7 +437,7 @@
     
       <script type="text/javascript">
         var disqus_config = function() {
-          this.page.url = 'https://iks-ran.github.io/2024/01/07/t2i_tips/';
+          this.page.url = 'https://iks-ran.me/2024/01/07/t2i_tips/';
           this.page.identifier = '/2024/01/07/t2i_tips/';
         };
         Fluid.utils.loadComments('#disqus_thread', function() {
