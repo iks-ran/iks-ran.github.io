@@ -16,16 +16,16 @@
   <meta name="author" content="iks-ran">
   <meta name="keywords" content="">
   
-    <meta name="description" content="SparseNeusAbstract The advancements in automatic text-to-3D generation have been remarkable. Most existing methods use pre-trained text-to-image diffusion models to optimize 3D representations like Ne">
+    <meta name="description" content="HiFAAbstract The advancements in automatic text-to-3D generation have been remarkable. Most existing methods use pre-trained text-to-image diffusion models to optimize 3D representations like Neural R">
 <meta property="og:type" content="article">
 <meta property="og:title" content="HiFA">
 <meta property="og:url" content="https://iks-ran.me/2023/10/16/HiFA/index.html">
 <meta property="og:site_name" content="iks-ran">
-<meta property="og:description" content="SparseNeusAbstract The advancements in automatic text-to-3D generation have been remarkable. Most existing methods use pre-trained text-to-image diffusion models to optimize 3D representations like Ne">
+<meta property="og:description" content="HiFAAbstract The advancements in automatic text-to-3D generation have been remarkable. Most existing methods use pre-trained text-to-image diffusion models to optimize 3D representations like Neural R">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://iks-ran.me/img/blogs/231016-HiFA/1.png">
 <meta property="article:published_time" content="2023-10-16T14:52:05.868Z">
-<meta property="article:modified_time" content="2023-10-17T11:39:06.051Z">
+<meta property="article:modified_time" content="2024-05-04T17:51:31.195Z">
 <meta property="article:author" content="iks-ran">
 <meta property="article:tag" content="Deep Learning">
 <meta property="article:tag" content="AIGC">
@@ -278,7 +278,7 @@
             
               <div class="markdown-body">
                 
-                <h2 id="SparseNeus"><a href="#SparseNeus" class="headerlink" title="SparseNeus"></a>SparseNeus</h2><h3 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h3><blockquote>
+                <h2 id="HiFA"><a href="#HiFA" class="headerlink" title="HiFA"></a>HiFA</h2><h3 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h3><blockquote>
 <p>The advancements in automatic text-to-3D generation have been remarkable. Most existing methods use pre-trained text-to-image diffusion models to optimize 3D representations like Neural Radiance Fields (NeRFs) via latent-space denoising score matching. Yet, these methods often result in artifacts and inconsistencies across different views due to their suboptimal optimization approaches and limited understanding of 3D geometry. Moreover, the inherent constraints of NeRFs in rendering crisp geometry and stable textures usually lead to a two-stage optimization to attain high-resolution details. This work proposes holistic sampling and smoothing approaches to achieve high-quality text-to-3D generation, all in a single-stage optimization. We compute denoising scores in the text-to-image diffusion model’s latent and image spaces. Instead of randomly sampling timesteps (also referred to as noise levels in denoising score matching), we introduce a novel timestep annealing approach that progressively reduces the sampled timestep throughout optimization. To generate high-quality renderings in a single-stage optimization, we propose regularization for the variance of z-coordinates along NeRF rays. To address texture flickering issues in NeRFs, we introduce a kernel smoothing technique that refines importance sampling weights coarse-to-fine, ensuring accurate and thorough sampling in high-density regions. Extensive experiments demonstrate the superiority of our method over previous approaches, enabling the generation of highly detailed and view-consistent 3D assets through a single-stage training process.</p>
 </blockquote>
 <h3 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h3><figure>
