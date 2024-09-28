@@ -16,24 +16,24 @@
   <meta name="author" content="iks-ran">
   <meta name="keywords" content="">
   
-    <meta name="description" content="利用 frp 进行内网穿透内网穿透内网穿透是一种通过互联网将局域网内的服务暴露给外部网络的技术。在一些情况下，由于网络环境或安全限制，局域网内的设备无法直接通过公网访问。内网穿透技术通过一些手段，使外部网络能够访问局域网内的服务，就像这些服务直接部署在公网上一样。 frpfrp（Fast Reverse Proxy）是一款开源免费的内网穿透的工具，它使用了反向代理的方式来实现内网穿透。frp由客户">
+    <meta name="description" content="Lecture 1: Introduction… Lecture 2: Drawing TrianglesReferenceBerkeley CS184&#x2F;284A - Computer Graphics and Imaging  ↩Steve Marschner and Peter Shirley. 2016. Fundamentals of Computer Graphics, Fou">
 <meta property="og:type" content="article">
-<meta property="og:title" content="利用 frp 进行内网穿透">
-<meta property="og:url" content="https://iks-ran.me/2024/01/29/reverse_proxy_with_frp/index.html">
+<meta property="og:title" content="【Berkeley CS184&#x2F;284A】Computer Graphics and Imaging 学习笔记">
+<meta property="og:url" content="https://iks-ran.me/2024/09/27/cs184/index.html">
 <meta property="og:site_name" content="iks-ran">
-<meta property="og:description" content="利用 frp 进行内网穿透内网穿透内网穿透是一种通过互联网将局域网内的服务暴露给外部网络的技术。在一些情况下，由于网络环境或安全限制，局域网内的设备无法直接通过公网访问。内网穿透技术通过一些手段，使外部网络能够访问局域网内的服务，就像这些服务直接部署在公网上一样。 frpfrp（Fast Reverse Proxy）是一款开源免费的内网穿透的工具，它使用了反向代理的方式来实现内网穿透。frp由客户">
+<meta property="og:description" content="Lecture 1: Introduction… Lecture 2: Drawing TrianglesReferenceBerkeley CS184&#x2F;284A - Computer Graphics and Imaging  ↩Steve Marschner and Peter Shirley. 2016. Fundamentals of Computer Graphics, Fou">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://iks-ran.me/img/cky.jpg">
-<meta property="article:published_time" content="2024-01-29T13:33:54.441Z">
-<meta property="article:modified_time" content="2024-01-29T13:58:41.293Z">
+<meta property="article:published_time" content="2024-09-27T15:55:35.570Z">
+<meta property="article:modified_time" content="2024-09-27T16:13:12.376Z">
 <meta property="article:author" content="iks-ran">
-<meta property="article:tag" content="Web">
+<meta property="article:tag" content="Computer Graphics">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://iks-ran.me/img/cky.jpg">
   
   
   
-  <title>利用 frp 进行内网穿透 - iks-ran</title>
+  <title>【Berkeley CS184/284A】Computer Graphics and Imaging 学习笔记 - iks-ran</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -199,7 +199,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="利用 frp 进行内网穿透"></span>
+            <span id="subtitle" data-typed-text="【Berkeley CS184/284A】Computer Graphics and Imaging 学习笔记"></span>
           
         </div>
 
@@ -210,8 +210,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-01-29 21:33" pubdate>
-          January 29, 2024 pm
+        <time datetime="2024-09-27 23:55" pubdate>
+          September 27, 2024 pm
         </time>
       </span>
     
@@ -222,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.1k words
+          217 words
         
       </span>
     
@@ -233,7 +233,7 @@
         
         
         
-          10 mins
+          2 mins
         
       </span>
     
@@ -271,28 +271,15 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">利用 frp 进行内网穿透</h1>
+            <h1 style="display: none">【Berkeley CS184/284A】Computer Graphics and Imaging 学习笔记</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="利用-frp-进行内网穿透"><a href="#利用-frp-进行内网穿透" class="headerlink" title="利用 frp 进行内网穿透"></a>利用 frp 进行内网穿透</h2><h3 id="内网穿透"><a href="#内网穿透" class="headerlink" title="内网穿透"></a>内网穿透</h3><p>内网穿透是一种通过互联网将局域网内的服务暴露给外部网络的技术。在一些情况下，由于网络环境或安全限制，局域网内的设备无法直接通过公网访问。内网穿透技术通过一些手段，使外部网络能够访问局域网内的服务，就像这些服务直接部署在公网上一样。</p>
-<h3 id="frp"><a href="#frp" class="headerlink" title="frp"></a>frp</h3><p>frp（Fast Reverse Proxy）是一款开源免费的内网穿透的工具，它使用了反向代理的方式来实现内网穿透。frp由客户端和服务器端组成，客户端运行在局域网内，服务器端运行在公网上。frp通过在服务器上创建一个反向代理端口，将外部请求转发到客户端上，从而实现对局域网内服务的访问。</p>
-<h3 id="下载和安装："><a href="#下载和安装：" class="headerlink" title="下载和安装："></a>下载和安装：</h3><p>在 frp 的 <a target="_blank" rel="noopener" href="https://github.com/fatedier/frp/releases/tag/v0.53.2">GitHub Releases</a> 下找到相应版本</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">wget https://github.com/fatedier/frp/releases/download/v0.53.2/frp_0.53.2_linux_amd64.tar.gz<br>tar -xf frp_0.53.2_linux_amd64.tar.gz<br></code></pre></td></tr></table></figure>
-
-<p>之后进入目录，分别在局域网客户端 (Client) 和公网服务端 (Server) 进行配置</p>
-<figure class="highlight toml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs toml"><span class="hljs-comment"># vim frpc.toml</span><br><span class="hljs-comment"># Client</span><br><span class="hljs-attr">serverAddr</span> = <span class="hljs-string">&quot;YOUR_SERVER_IP&quot;</span><br><span class="hljs-attr">serverPort</span> = <span class="hljs-number">7000</span><br><br><span class="hljs-section">[[proxies]]</span><br><span class="hljs-attr">name</span> = <span class="hljs-string">&quot;web&quot;</span><br><span class="hljs-attr">type</span> = <span class="hljs-string">&quot;http&quot;</span><br><span class="hljs-attr">localPort</span> = <span class="hljs-number">5000</span> <span class="hljs-comment"># 局域网内 Client 的服务端口</span><br><span class="hljs-attr">customDomains</span> = [<span class="hljs-string">&quot;YOUR_CUSTOM_DOMAIN&quot;</span>, <span class="hljs-string">&quot;YOUR_SERVER_IP&quot;</span>, <span class="hljs-string">&quot;0.0.0.0&quot;</span>, <span class="hljs-string">&quot;localhost&quot;</span>, <span class="hljs-string">&quot;127.0.0.1&quot;</span>] <span class="hljs-comment"># 只能通过相应host访问，例如如果没有 &quot;localhost&quot; 一项，则就算在 frp Server的服务器上也无法通过 http://localhost 访问服务</span><br></code></pre></td></tr></table></figure>
-
-<figure class="highlight toml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs toml"><span class="hljs-comment"># vim frps.toml</span><br><span class="hljs-comment"># Server</span><br><span class="hljs-attr">bindPort</span> = <span class="hljs-number">7000</span> <span class="hljs-comment"># 上面的 serverPort</span><br><span class="hljs-attr">vhostHTTPPort</span> = YOUR_SERVICE_PORT <span class="hljs-comment"># 代理服务的访问端口</span><br></code></pre></td></tr></table></figure>
-
-<p>保存后分别在服务端和客户端启动服务</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># Server</span><br>./frps -c frps.toml<br></code></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># Client</span><br>./frpc -c frpc.toml<br></code></pre></td></tr></table></figure>
-
-<p>其他配置可以参考 frp 的<a target="_blank" rel="noopener" href="https://gofrp.org/">官方网站</a></p>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://gofrp.org/zh-cn/docs/">https://gofrp.org/zh-cn/docs/</a>
-<a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
+                <h2 id="Lecture-1-Introduction"><a href="#Lecture-1-Introduction" class="headerlink" title="Lecture 1: Introduction"></a>Lecture 1: Introduction</h2><p>…</p>
+<h2 id="Lecture-2-Drawing-Triangles"><a href="#Lecture-2-Drawing-Triangles" class="headerlink" title="Lecture 2: Drawing Triangles"></a>Lecture 2: Drawing Triangles</h2><h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://cs184.eecs.berkeley.edu/sp24">Berkeley CS184&#x2F;284A - Computer Graphics and Imaging</a>
+<a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span><a target="_blank" rel="noopener" href="https://dl.acm.org/doi/book/10.5555/2872329">Steve Marschner and Peter Shirley. 2016. Fundamentals of Computer Graphics, Fourth Edition (4th. ed.). A. K. Peters, Ltd., USA.</a>
+<a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>
                 
               </div>
             
@@ -310,7 +297,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/Others/" class="category-chain-item">Others</a>
+  <a href="/categories/Notes/" class="category-chain-item">Notes</a>
   
   
 
@@ -325,7 +312,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/Web/">#Web</a>
+        <a href="/tags/Computer-Graphics/">#Computer Graphics</a>
       
     </div>
   
@@ -337,8 +324,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>利用 frp 进行内网穿透</div>
-      <div>https://iks-ran.me/2024/01/29/reverse_proxy_with_frp/</div>
+      <div>【Berkeley CS184/284A】Computer Graphics and Imaging 学习笔记</div>
+      <div>https://iks-ran.me/2024/09/27/cs184/</div>
     </div>
     <div class="license-meta">
       
@@ -350,7 +337,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>Posted on</div>
-          <div>January 29, 2024</div>
+          <div>September 27, 2024</div>
         </div>
       
       
@@ -382,18 +369,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/09/27/cs184/" title="【Berkeley CS184/284A】Computer Graphics and Imaging 学习笔记">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">【Berkeley CS184/284A】Computer Graphics and Imaging 学习笔记</span>
-                        <span class="visible-mobile">Previous</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/01/15/build_web_service/" title="Flask + Gunicorn + Nginx 搭建 Web 服务">
-                        <span class="hidden-mobile">Flask + Gunicorn + Nginx 搭建 Web 服务</span>
+                      <a href="/2024/01/29/reverse_proxy_with_frp/" title="利用 frp 进行内网穿透">
+                        <span class="hidden-mobile">利用 frp 进行内网穿透</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -413,8 +394,8 @@
     
       <script type="text/javascript">
         var disqus_config = function() {
-          this.page.url = 'https://iks-ran.me/2024/01/29/reverse_proxy_with_frp/';
-          this.page.identifier = '/2024/01/29/reverse_proxy_with_frp/';
+          this.page.url = 'https://iks-ran.me/2024/09/27/cs184/';
+          this.page.identifier = '/2024/09/27/cs184/';
         };
         Fluid.utils.loadComments('#disqus_thread', function() {
           var d = document, s = d.createElement('script');

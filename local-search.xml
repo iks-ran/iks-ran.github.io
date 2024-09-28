@@ -4,6 +4,31 @@
   
   
   <entry>
+    <title>【Berkeley CS184/284A】Computer Graphics and Imaging 学习笔记</title>
+    <link href="/2024/09/27/cs184/"/>
+    <url>/2024/09/27/cs184/</url>
+    
+    <content type="html"><![CDATA[<h2 id="Lecture-1-Introduction"><a href="#Lecture-1-Introduction" class="headerlink" title="Lecture 1: Introduction"></a>Lecture 1: Introduction</h2><p>…</p><h2 id="Lecture-2-Drawing-Triangles"><a href="#Lecture-2-Drawing-Triangles" class="headerlink" title="Lecture 2: Drawing Triangles"></a>Lecture 2: Drawing Triangles</h2><h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><section class="footnotes"><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span><a href="https://cs184.eecs.berkeley.edu/sp24">Berkeley CS184&#x2F;284A - Computer Graphics and Imaging</a><a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span><a href="https://dl.acm.org/doi/book/10.5555/2872329">Steve Marschner and Peter Shirley. 2016. Fundamentals of Computer Graphics, Fourth Edition (4th. ed.). A. K. Peters, Ltd., USA.</a><a href="#fnref:2" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section>]]></content>
+    
+    
+    <categories>
+      
+      <category>Notes</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Computer Graphics</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>利用 frp 进行内网穿透</title>
     <link href="/2024/01/29/reverse_proxy_with_frp/"/>
     <url>/2024/01/29/reverse_proxy_with_frp/</url>
